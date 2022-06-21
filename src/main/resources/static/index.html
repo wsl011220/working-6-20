@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Basic Pagination - jQuery EasyUI Demo</title>
+    <link rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="themes/icon.css">
+<!--    <link rel="stylesheet" type="text/css" href="demo.css">-->
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="js/easyui-lang-zh_CN.js"></script>
+</head>
+
+<body>
+<div style="margin:20px 0;"></div>
+<input class="easyui-searchbox" data-options="prompt:'Please Input Value',searcher:doSearch" style="width:300px"></input>
+<div style="margin:20px 0;"></div>
+<div>
+    <table  id="mytable"></table>
+</div>
+
+
+
+
+<div id="exportExcelQDB" class="easyui-dialog" title="添加" style="width: 400px;height: 350px;" data-options="buttons: '#dlg-buttons-export',modal:true">
+    <form method="get" id="exportCelQDB" class="easyui-from">
+        <table style="margin-left: 10px;margin-top:15px;" border="0">
+            <tr>
+                <td>column1</td>
+                <td>
+                    <input class="easyui-textbox"  name="column1" value="">
+                </td>
+            </tr>
+            <tr>
+                <td>column2</td>
+                <td>
+                    <input class="easyui-textbox" name="column2" value="" >
+                </td>
+            </tr>
+            <tr>
+                <td>column3</td>
+                <td>
+                    <input class="easyui-textbox" name="column3" value="" >
+                </td>
+            </tr>
+            <tr>
+                <td>column4</td>
+                <td>
+                    <input class="easyui-textbox" name="column4" value="" >
+                </td>
+            </tr>
+            <tr>
+                <td>column5</td>
+                <td>
+                    <input class="easyui-textbox" name="column5" value="" >
+                </td>
+            </tr>
+            <tr>
+                <td>column6</td>
+                <td>
+                    <input class="easyui-textbox" name="column6" value="" >
+                </td>
+            </tr>
+            <tr>
+                <td>column7</td>
+                <td>
+                    <input  type="text" class="easyui-datebox" required="required"  name="column7" value="" >
+                </td>
+            </tr>
+            <tr>
+                <td>column8</td>
+                <td>
+                    <input class="easyui-textbox" name="column8" value="" >
+                </td>
+            </tr>
+            <tr>
+                <td>column9</td>
+                <td>
+                    <input class="easyui-textbox"  name="column9" value="" >
+                </td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+<div id="dlg-buttons-export" style="text-align: center;">
+    <a class="easyui-linkbutton" onClick="upload()">确定</a>
+    <a class="easyui-linkbutton" onClick="javascript:$('#exportExcelQDB').dialog('close');">取消</a>
+<!--    <button type="button"  class="easyui-linkbutton" name="记住我">记住</button>-->
+</div>
+
+
+
+
+
+</body>
+<script type="text/javascript">
+    function doSearch(value){
+        alert('You input: ' + value);
+    }
+
+        //页面加载完成后，创建数据表格datagrid
+        $("#mytable").datagrid({
+
+            //定义标题行所有的列
+            columns:[[
+                {title:'column1',field:'column1'},
+                {title:'column2',field:'column2'},
+                {title:'column3',field:'column3'},
+                {title:'column4',field:'column4'},
+                {title:'column5',field:'column5'},
+                {title:'column6',field:'column6'},
+                {title:'column7',field:'column7'},
+                {title:'column8',field:'column8'},
+                {title:'column9',field:'column9'},
+                {title:'createtime',field:'createtime'},
+                {title:'updatetime',field:'updatetime'},
+
+            ]],
+            //指定数据表格发送ajax请求的地址
+            url:'/find',
+            rownumbers:true,
+            singleSelect:true,
+            //定义工具栏
+            toolbar:[
+                {text:'添加',iconCls:'icon-add',
+                    //为按钮绑定单击事件
+                    handler:function(){
+                    // alert(document.getElementById(("ff")).style.display='block')
+                        //打开弹出框的方法
+                        $("#exportExcelQDB").dialog('open');
+                        var obj={};
+                        obj.ccbhQ=ccbh;
+                        obj.kdbhQ=kdbh;
+                        $("#exportCelQDB").form("load", obj);	//渲染数据到input框
+                        $("#exportExcelQDB").dialog('close');	//关闭弹出框
+                        $('#exportExcelQDB').form('clear');		//情空弹出框的表单
+
+
+
+                    }
+                },
+                {text:'删除',iconCls:'icon-remove'},
+                {text:'修改',iconCls:'icon-edit'},
+                {text:'查询',iconCls:'icon-search'}
+            ],
+            //显示分页条
+            pagination:true
+        });
+
+
+    function upload() {
+        var data = $('#exportCelQDB').serialize()
+alert(data)
+        $.ajax({
+            url: "/insert",
+            type: "get",
+            data: data,
+            dataType: "json",
+            // 这两个参数必须写
+            contentType: false,
+            processData: false,
+            success: function (resp) {
+                alert(resp.message);
+                var imgPath = resp.data;
+
+                for (let i = 0; i < imgPath.size; i++) {
+                    alert(imgPath[i]);
+                }
+
+                $("#headerImg").attr('src', imgPath[0])
+            }
+        })
+    }
+
+</script>
+</html>

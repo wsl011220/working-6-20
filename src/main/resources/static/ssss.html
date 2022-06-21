@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Basic Pagination - jQuery EasyUI Demo</title>
+    <link rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="themes/icon.css">
+    <!--    <link rel="stylesheet" type="text/css" href="demo.css">-->
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="js/easyui-lang-zh_CN.js"></script>
+</head>
+
+<body>
+
+<a id="btn" href="http://localhost:8080/find" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
+
+<table id="tt" class="easyui-datagrid" style="width:740px;height:250px"
+       url="http://localhost:8080/find" toolbar="#tb"
+       title="Load Data" iconCls="icon-save"
+       rownumbers="true" pagination="true">
+    <thead>
+    <tr>
+        <th field="column1"  width="80" align="center">1</th>
+        <th field="column2"  width="80" align="center">2</th>
+        <th field="column3"  width="80" align="center">3</th>
+        <th field="column4"  width="80" align="center">4</th>
+        <th field="column5"  width="80" align="center">5</th>
+        <th field="column6"  width="80" align="center">6</th>
+        <th field="column7"  width="80" align="center">7</th>
+        <th field="column8" width="80" align="center">8</th>
+        <th field="column9" width="80" align="center">9</th>
+
+    </tr>
+    </thead>
+</table>
+
+<div id="tb" style="padding:3px">
+    <span>Item ID:</span>
+    <input id="itemid" style="line-height:26px;border:1px solid #ccc">
+    <span>Product ID:</span>
+    <input id="productid" style="line-height:26px;border:1px solid #ccc">
+    <a href="#" class="easyui-linkbutton" plain="true" onclick="doSearch()">Search</a>
+</div>
+
+
+</body>
+<script>
+    function doSearch(){
+        $('#tt').datagrid('load',{
+            itemid: $('#itemid').val(),
+            productid: $('#productid').val()
+        });
+    }
+</script>
+</html>
