@@ -4,16 +4,24 @@ package com.wsl.controller;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
+
 import com.wsl.Result.Result;
 import com.wsl.entity.Table;
-import com.wsl.entity.TableExcel;
+
 import com.wsl.service.TableService;
 
-import org.junit.Test;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Pageable;
+import java.util.Iterator;
+import java.util.List;
 
 
 @RestController
@@ -22,10 +30,11 @@ public class TableController {
     @Autowired
     TableService tableService;
     @RequestMapping("/find")
-    public Result find(Integer page, Integer rows) {
+    public Result find() {
 
 
-        return tableService.find(page,rows);
+
+        return tableService.find();
     }
     @PostMapping  ("/delete")
     public Result delete(@RequestParam("ids[]") Integer[] ids) {
@@ -46,7 +55,7 @@ public class TableController {
         String filename = "D:\\user1.xlsx";
         System.out.println(tableService.daochu());
         // 向Excel中写入数据 也可以通过 head(Class<?>) 指定数据模板
-        EasyExcel.write(filename, TableExcel.class)
+        EasyExcel.write(filename, Table.class)
                 .sheet("用户信息")
                 .doWrite(tableService.daochu());
 

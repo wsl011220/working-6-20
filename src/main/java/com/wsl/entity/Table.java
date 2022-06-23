@@ -1,5 +1,7 @@
 package com.wsl.entity;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,32 +20,52 @@ import java.util.Date;
 public class Table {
     @Id
     @Column(name = "Column_1")//绑定id列
+    @ExcelProperty("uuid")
+   private Integer column1;
 
-   private Integer Column1;
     @Column(name = "Column_2")
-    private String  Column2;
-    @Column(name = "Column_3")
-    private  String  Column3;
-    @Column(name = "Column_4")
-    private  String  Column4;
-    @Column(name = "Column_5")
-    private  String  Column5;
-    @Column(name = "Column_6")
-    private String  Column6;
+    @ExcelProperty("姓名")
+    private String  column2;
 
+    @Column(name = "Column_3")
+    @ExcelProperty("姓名全拼")
+    private  String  column3;
+
+    @Column(name = "Column_4")
+    @ExcelProperty("性别")
+    private  String  column4;
+
+
+    @Column(name = "Column_5")
+    @ExcelProperty("身份证证件")
+    private  String  column5;
+
+    @Column(name = "column_6")
+    @ExcelProperty("身份证证件号")
+    private String  column6;
+
+    @ExcelProperty("出生日期")
     @Column(name = "Column_7")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date Column7;
+    private Date column7;
 
+    @ExcelProperty("手机号码")
     @Column(name = "Column_8")
-    private String  Column8;
+    private String  column8;
+
+    @ExcelProperty("电子邮箱")
     @Column(name = "Column_9")
-    private String  Column9;
+    private String  column9;
+
     @Column(name = "createtime")
+    @ExcelProperty("createtime")
     private Date    createtime;
+
     @Column(name = "updatetime")
+    @ExcelProperty("updatetime")
     private Date   updatetime;
+
 
 
 
