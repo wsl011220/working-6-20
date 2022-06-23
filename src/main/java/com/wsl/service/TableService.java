@@ -2,12 +2,17 @@ package com.wsl.service;
 
 import com.wsl.Result.Result;
 import com.wsl.entity.Table;
+import com.wsl.entity.TableExcel;
+
+import java.util.List;
 
 public interface TableService {
-    Result find();
-    Result delete(Table table);
+    Result find(Integer page, Integer rows);
+    Result delete(Integer id);
 
-    Result insert(Table table);
+    Result insertorupdate(Table table);
 
     Result update(Table table);
+
+    List<TableExcel> daochu();
 }

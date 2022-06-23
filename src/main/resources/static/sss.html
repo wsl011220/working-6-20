@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Basic Pagination - jQuery EasyUI Demo</title>
+    <link rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="themes/icon.css">
+    <!--    <link rel="stylesheet" type="text/css" href="demo.css">-->
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="../../datagrid-export.js"></script>
+</head>
+
+<body>
+
+
+
+
+</body>
+<script type="text/javascript">
+    // //打开弹出框的方法
+    // alert("111")
+    //
+    // alert("222")
+    // var obj={'titlenameQ':'123','ccbhQ': '迪丽热巴','kdbhQ':'12122'};
+    // alert("3333")
+    // $("#exportExcelQDB").dialog('open');
+    // alert("4444")
+    // function s(obj) {
+    //
+        var html = '';
+
+            html = html + '<tr>';
+            html = html + '<td>' + obj.titlenameQ + '</td>';
+            html = html + '</tr>';
+            html = html + '<tr>';
+            html = html + '<td>' + obj.ccbhQ + '</td>';
+            html = html + '</tr>';
+            html = html + '<tr>';
+            html = html + '<td>' + obj.kdbhQ + '</td>';
+            // html = html + '<td>' + data[i].power + '</td>';
+            // html = html + '<td>' + data[i].name + '</td>';
+            // html = html + '<td>' + data[i].time + '</td>';
+            html = html + '</tr>';
+    //
+    //     $('#exportExcelQDB').html(html);//通过jquery方式获取table，并把tr,td的html输出到table中
+    //     alert("sss")
+    // }
+    //
+    //         s();
+    //
+    // $("#exportCelQDB").form("load", obj);	//渲染数据到input框
+    // $("#exportExcelQDB").dialog('close');	//关闭弹出框
+    // $('#exportExcelQDB').form('clear');		//情空弹出框的表单
+
+    //打开弹出框的方法
+    $("#exportExcelQDB").dialog('open');
+    var obj={};
+    obj.ccbhQ=ccbh;
+    obj.kdbhQ=kdbh;
+    $("#exportCelQDB").form("load", obj);	//渲染数据到input框
+    $("#exportExcelQDB").dialog('close');	//关闭弹出框
+    $('#exportExcelQDB').form('clear');		//情空弹出框的表单
+
+
+</script>
+</html>

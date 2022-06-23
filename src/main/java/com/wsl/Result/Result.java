@@ -3,7 +3,7 @@ package com.wsl.Result;
 
 
 public class Result {
-    private int total = 200;
+    private int total;
 
     private Object rows;
 
