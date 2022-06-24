@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.awt.print.Pageable;
+import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,9 +33,10 @@ public class TableController {
     @RequestMapping("/find")
     public Result find() {
 
+        Result result = new Result();
+         result = tableService.find();
 
-
-        return tableService.find();
+        return result;
     }
     @PostMapping  ("/delete")
     public Result delete(@RequestParam("ids[]") Integer[] ids) {
@@ -63,16 +65,25 @@ public class TableController {
     }
     @RequestMapping ("/daoru")
     public void daoru() {
-
+        Result result = new Result();
         String filename = "D:\\user1.xlsx";
+        File file = new File(filename);
+
+        // 如果路径不存在
+        if (!file.exists()) {
+            // 创建多级路径
+            file.mkdirs();
+        }
         // 读取excel
         EasyExcel.read(filename, Table.class, new AnalysisEventListener<Table>() {
             // 每解析一行数据,该方法会被调用一次
             @Override
             public void invoke(Table table, AnalysisContext analysisContext) {
                 System.out.println("解析数据为:" + table.toString());
+                result.setRows(table);
             }
             // 全部解析完成被调用
+
             @Override
             public void doAfterAllAnalysed(AnalysisContext analysisContext) {
                 System.out.println("解析完成...");
@@ -81,6 +92,7 @@ public class TableController {
             }
         }).sheet().doRead();
 
+        System.out.println("-------------"+result.getRows());
 
 
 
@@ -91,6 +103,11 @@ public class TableController {
 
 
 
+    @RequestMapping("/finds")
+    public Result finds(Integer page,Integer rows) {
+        page=page-1;
+        return tableService.finds(page,rows);
+    }
 
 
 

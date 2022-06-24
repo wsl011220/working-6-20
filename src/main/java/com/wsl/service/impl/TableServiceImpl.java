@@ -9,12 +9,14 @@ import com.wsl.service.TableService;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 
 @Service
 public class TableServiceImpl implements TableService {
@@ -40,13 +42,13 @@ public class TableServiceImpl implements TableService {
 
         Optional<Table> byId = tableDao.findById(table.getColumn1());
 
-        if(byId==null&&byId.equals("")){
+        if(byId.isPresent()){
             Result result = new Result();
-            table.setCreatetime(new Date());
+            table.setUpdatetime(new Date());
             Table save = tableDao.save(table);
         }else {
-           Result result = new Result();
-            table.setUpdatetime(new Date());
+          Result result = new Result();
+            table.setCreatetime(new Date());
             Table save = tableDao.save(table);
         }
 
@@ -65,22 +67,26 @@ public class TableServiceImpl implements TableService {
         List<Table> tableExcels = new ArrayList<>();
         tableExcels = tableDao.findAll();
 
-//        TableExcel tableExcel =new  TableExcel();
-//            tableExcel.setColumn1(111);
-//            tableExcel.setColumn2("admin");
-//            tableExcel.setColumn3("男");
-//            tableExcel.setColumn4("dsds");
-//            tableExcel.setColumn5("sdadadad");
-//            tableExcel.setColumn6("jn");
-//            tableExcel.setColumn7(new Date());
-//            tableExcel.setColumn8("sadd");
-//            tableExcel.setColumn9("sadd");
-//            tableExcel.setCreatetime(new Date());
-//            tableExcel.setUpdatetime(new Date());
-//
-//            tableExcels.add(tableExcel);
+
 
         return tableExcels;
+
+    }
+
+    @Override
+    public Result finds(Integer pageNum, Integer pageSize) {
+
+        Pageable pageable = PageRequest.of(pageNum,pageSize);
+        PageRequest pageReques = PageRequest.of(pageNum, pageSize);
+
+        Page<List<Table>> s = tableDao.findS(pageReques);
+
+        Result result = new Result();
+          result.setRows(s.getContent());
+            result.setTotal((int) s.getTotalElements());
+
+        return result;
+
 
     }
 }

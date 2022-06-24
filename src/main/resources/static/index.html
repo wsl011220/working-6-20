@@ -13,10 +13,7 @@
 </head>
 
 <body>
-<div style="margin:20px 0;"></div>
-<input class="easyui-searchbox" data-options="prompt:'Please Input Value',searcher:doSearch" style="width:300px"></input>
-<div style="margin:20px 0;"></div>
-<div>
+
     <table method="get" id="mytable"></table>
 </div>
 
@@ -32,7 +29,7 @@
             <tr>
                 <td>姓名</td>
                 <td>
-                    <input  class="easyui-textbox" data-options="prompt:'请输入日期',required:true" name="column2" value="" >
+                    <input  class="easyui-textbox" data-options="prompt:'请输入姓名',required:true" name="column2" value="" >
                 </td>
             </tr>
             <tr>
@@ -101,9 +98,6 @@
 
 </body>
 <script type="text/javascript">
-    function doSearch(value){
-        alert('You input: ' + value);
-    }
 
         //页面加载完成后，创建数据表格datagrid
         $("#mytable").datagrid({
@@ -126,7 +120,7 @@
             ]],
             frozenColumns:{title:'修改'},
             //指定数据表格发送ajax请求的地址
-            url:'http://localhost:8080/find',
+            url:'http://localhost:8080/finds',
             rownumbers:true,
             singleSelect:true,
 
@@ -178,7 +172,7 @@
                                     type: "post",
                                     dataType: "json",
                                     success: function () {
-
+                                        $('#mytable').datagrid('reload')
                                         alert("删除成功");
 
                                     }
@@ -228,18 +222,22 @@
                             // 这两个参数必须写
                             contentType: false,
                             processData: false,
+                            success :function (){
+                                alert("导出成功，路径为D:\\user1.xlsx")
+                            }
 
                         })
                     }},
                 {text:'导入',iconCls:'icon-print'}
             ],
-            //显示分页条
-            // pagination:true
+            // 显示分页条
+            pagination:true
         });
 
     //增加
     function upload() {
-
+        // var isValid = $("#exportCelQDB").numberbox("isValid");
+        // $("#phone").numberbox("disable");
 
         var data = $('#exportCelQDB').serialize()
          alert(data)
@@ -252,7 +250,7 @@
             contentType: false,
             processData: false,
             success: function () {
-                alert("插入成功");
+                alert("成功");
                 $("#exportExcelQDB").dialog('close');	//关闭弹出框
                 $('#exportExcelQDB').form('clear');		//情空弹出框的表单
                 $('#mytable').datagrid('reload')
