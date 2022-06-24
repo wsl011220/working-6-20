@@ -15,13 +15,10 @@ import com.wsl.service.TableService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
 import java.io.File;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -64,7 +61,7 @@ public class TableController {
 
     }
     @RequestMapping ("/daoru")
-    public void daoru() {
+    public Result daoru() {
         Result result = new Result();
         String filename = "D:\\user1.xlsx";
         File file = new File(filename);
@@ -74,13 +71,15 @@ public class TableController {
             // 创建多级路径
             file.mkdirs();
         }
+       List<Table> list = new ArrayList<>();
         // 读取excel
         EasyExcel.read(filename, Table.class, new AnalysisEventListener<Table>() {
             // 每解析一行数据,该方法会被调用一次
             @Override
             public void invoke(Table table, AnalysisContext analysisContext) {
+                list.add(table);
                 System.out.println("解析数据为:" + table.toString());
-                result.setRows(table);
+
             }
             // 全部解析完成被调用
 
@@ -92,9 +91,13 @@ public class TableController {
             }
         }).sheet().doRead();
 
-        System.out.println("-------------"+result.getRows());
-
-
+//        System.out.println("-------------"+list);
+        for (Table a:list
+             ) {
+            System.out.println(list);
+        }
+           result.setRows(list);
+         return result;
 
     }
 

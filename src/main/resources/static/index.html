@@ -13,8 +13,11 @@
 </head>
 
 <body>
-
+<div>
     <table method="get" id="mytable"></table>
+</div>
+<div>
+    <table method="get" class="easyui-from" id="daorutanchuang"></table>
 </div>
 
 <div id="exportExcelQDB" class="easyui-dialog" closed="true" title="添加" style="width: 400px;height: 350px;" data-options="buttons: '#dlg-buttons-export',modal:true">
@@ -87,7 +90,7 @@
     </form>
 </div>
 <div id="dlg-buttons-export" style="text-align: center;">
-    <a class="easyui-linkbutton" onClick="upload()">确定</a>
+    <a id="addyanzheng" class="easyui-linkbutton" onClick="upload()">确定</a>
     <a class="easyui-linkbutton" onClick="javascript:$('#exportExcelQDB').dialog('close').form('clear');">取消</a>
 <!--    <button type="button"  class="easyui-linkbutton" name="记住我">记住</button>-->
 </div>
@@ -228,34 +231,59 @@
 
                         })
                     }},
-                {text:'导入',iconCls:'icon-print'}
+                {text:'导入',iconCls:'icon-print',
+                    handler:function(){
+                        $.ajax({
+                            url: "/daoru",
+                            type: "get",
+                            // 这两个参数必须写
+                            contentType: false,
+                            processData: false,
+                            success :function (){
+                                alert("导入成功")
+                            }
+
+                        })
+                    }}
             ],
             // 显示分页条
             pagination:true
         });
-
+        $('#addyanzheng').linkbutton('enable');
     //增加
     function upload() {
-        // var isValid = $("#exportCelQDB").numberbox("isValid");
-        // $("#phone").numberbox("disable");
 
-        var data = $('#exportCelQDB').serialize()
-         alert(data)
-        $.ajax({
-            url: "/insert",
-            type: "get",
-            data: data,
-            dataType: "json",
-            // 这两个参数必须写
-            contentType: false,
-            processData: false,
-            success: function () {
-                alert("成功");
-                $("#exportExcelQDB").dialog('close');	//关闭弹出框
-                $('#exportExcelQDB').form('clear');		//情空弹出框的表单
-                $('#mytable').datagrid('reload')
+        $("#addyanzheng").click(function(){
+            //ff为表单id。所有数据符合校验要求时，isValid 返回true。
+            //var isValid = $("#this").form('validate');
+            var isValid = $("#exportCelQDB").form('validate');
+
+
+            if(isValid){
+
+                var data = $('#exportCelQDB').serialize()
+                alert(data)
+                $.ajax({
+                    url: "/insert",
+                    type: "get",
+                    data: data,
+                    dataType: "json",
+                    // 这两个参数必须写
+                    contentType: false,
+                    processData: false,
+                    success: function () {
+                        alert("成功");
+                        $("#exportExcelQDB").dialog('close');	//关闭弹出框
+                        $('#exportExcelQDB').form('clear');		//情空弹出框的表单
+                        $('#mytable').datagrid('reload')
+                    }
+                })
+            }else {
+                $('#addyanzheng').linkbutton('disable');
+                alert("验证失败")
             }
-        })
+        });
+
     }
     //身份证号码
     function identityValidate(value) {
