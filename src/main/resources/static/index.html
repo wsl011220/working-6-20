@@ -16,9 +16,9 @@
 <div>
     <table method="get" id="mytable"></table>
 </div>
-<div>
-    <table method="get" class="easyui-from" id="daorutanchuang"></table>
-</div>
+<!--<div class="easyui-dialog" closed="true">-->
+<!--    <table method="get" class="easyui-from" id="daorutanchuang"></table>-->
+<!--</div>-->
 
 <div id="exportExcelQDB" class="easyui-dialog" closed="true" title="添加" style="width: 400px;height: 350px;" data-options="buttons: '#dlg-buttons-export',modal:true">
     <form method="get" id="exportCelQDB" class="easyui-from">
@@ -32,13 +32,13 @@
             <tr>
                 <td>姓名</td>
                 <td>
-                    <input  class="easyui-textbox" data-options="prompt:'请输入姓名',required:true" name="column2" value="" >
+                    <input  class="easyui-textbox" onchange="myFunction()" data-options="prompt:'请输入姓名',required:true" name="column2" value="" >
                 </td>
             </tr>
             <tr>
                 <td>姓名全拼</td>
                 <td>
-                    <input  onclick="tianchong" class="easyui-textbox" data-options="prompt:'请输入姓名全拼',required:true" name="column3" value="" >
+                    <input   class="easyui-textbox" data-options="prompt:'请输入姓名全拼'" name="column3" value="" >
                 </td>
             </tr>
             <tr>
@@ -87,21 +87,121 @@
             </tr>
 
         </table>
+<!--        <a id="addyanzheng" class="easyui-linkbutton" onClick="upload()">确定</a>-->
+<!--        <a class="easyui-linkbutton" onClick="javascript:$('#exportExcelQDB').dialog('close').form('clear');">取消</a>-->
+
     </form>
+    <div  style="text-align: center;">
+        <a id="addyanzheng" class="easyui-linkbutton" onClick="upload()" style="text-align: center">确定</a>
+        <a class="easyui-linkbutton" style="text-align: center" onClick="javascript:$('#exportExcelQDB').dialog('close').form('clear');">取消</a>
+
+    </div>
+</div>
+
+
+
+
+
+<div id="exportExcelQDB2" class="easyui-dialog" closed="true" title="导入" style="width: 400px;height: 350px;" data-options="buttons: '#dlg-buttons-export',modal:true">
+
+
+    <form method="get" id="exportCelQDB2" class="easyui-from">
+        <table  style="margin-left: 10px;margin-top:15px;" border="0">
+            <tr>
+                <td>uuid</td>
+                <td>
+                    <input id="b2" class="easyui-textbox" data-options="prompt:'请输入uuid',required:true"  name="column1" value="">
+                </td>
+            </tr>
+            <tr>
+                <td>姓名</td>
+                <td>
+                    <input  class="easyui-textbox" onchange="myFunction()" data-options="prompt:'请输入姓名',required:true" name="column2" value="" >
+                </td>
+            </tr>
+            <tr>
+                <td>姓名全拼</td>
+                <td>
+                    <input   class="easyui-textbox" data-options="prompt:'请输入姓名全拼'" name="column3" value="" >
+                </td>
+            </tr>
+            <tr>
+                <td>性别</td>
+                <td>
+                    <select class="easyui-combobox" data-options="prompt:'请输入性别',required:true" name="column4" style="width:180px;">
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>身份证证件</td>
+                <td>
+                    <select class="easyui-combobox" data-options="prompt:'请输入身份证类型',required:true" name="column5" style="width:180px;">
+                        <option value="居民身份证">居民身份证</option>
+                        <option value="港澳台身份证">港澳台身份证</option>
+
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>身份证证件号</td>
+                <td>
+                    <input class="easyui-textbox" data-options="required:true,prompt:'请输入身份证号码',required:true,validType:'idcard'" name="column6" value="" >
+                </td>
+            </tr>
+            <tr>
+                <td>出生日期</td>
+                <td>
+                    <input   type="text" data-options="prompt:'请输入日期',required:true," class="easyui-datebox" required="required"  name="column7" value="" >
+                </td>
+            </tr>
+            <tr>
+                <td>手机号码</td>
+                <td>
+                    <input  class="easyui-textbox" data-options="prompt:'请输入电话号码码',required:true,validType:'phoneNum'" name="column8" value="" >
+                </td>
+            </tr>
+            <tr>
+                <td>电子邮箱</td>
+                <td>
+                    <input class="easyui-textbox" data-options="prompt:'请输入邮箱',required:true,validType:'email'" name="column9" value="" >
+                </td>
+            </tr>
+
+
+        </table>
+    </form>
+
+
+
 </div>
 <div id="dlg-buttons-export" style="text-align: center;">
-    <a id="addyanzheng" class="easyui-linkbutton" onClick="upload()">确定</a>
+    <a id="addyanzheng2" class="easyui-linkbutton" onClick="upload()">导入</a>
     <a class="easyui-linkbutton" onClick="javascript:$('#exportExcelQDB').dialog('close').form('clear');">取消</a>
-<!--    <button type="button"  class="easyui-linkbutton" name="记住我">记住</button>-->
+
 </div>
-
-
 
 
 
 </body>
 <script type="text/javascript">
+    var datas;
+    function myFunction(){
 
+        console.log("sss")
+             var value  = $('#column2').textbox('getValue')
+        console.log(value)
+                $('#column3').textbox('setValue',value);
+    }
+    // $('#column3').datetimebox({
+    //     onClickButton: function() {
+    //      var value  = $('#column2').textbox('getValue')
+    //         alert(value)
+    //         $('#column3').textbox('setValue',value);
+    //     }
+    // });
         //页面加载完成后，创建数据表格datagrid
         $("#mytable").datagrid({
 
@@ -196,6 +296,7 @@
                     handler:function(){
                         $("#exportExcelQDB").dialog('open');
                         var rows=$('#mytable').datagrid('getChecked');
+                        console.log(rows[0])
                         $('#exportCelQDB').form('load',{
                             column1:rows[0].column1,
                             column2:rows[0].column2,
@@ -216,6 +317,7 @@
 
                     }},
                 {text:'导出',iconCls:'icon-print',
+
                     handler:function(){
                         $.ajax({
                             url: "/daochu",
@@ -233,23 +335,87 @@
                     }},
                 {text:'导入',iconCls:'icon-print',
                     handler:function(){
+                        $("#exportExcelQDB2").dialog('open');
                         $.ajax({
                             url: "/daoru",
                             type: "get",
+                            dataType: "json",
+
                             // 这两个参数必须写
                             contentType: false,
                             processData: false,
-                            success :function (){
-                                alert("导入成功")
-                            }
+                           success:function (data) {
+                               $('#exportCelQDB2').form('load',{
+                                   column1:data.rows[0].column1,
+                                   column2:data.rows[0].column2,
+                                   column3:data.rows[0].column3,
+                                   column4:data.rows[0].column4,
+                                   column5:data.rows[0].column5,
+                                   column6:data.rows[0].column6,
+                                   column7:data.rows[0].column7,
+                                   column8:data.rows[0].column8,
+                                   column9:data.rows[0].column9,});
+                             var  s;
+                                for ( s=1;s<data.total;s++){
+                                    var isValid = $("#exportCelQDB2").form('validate');
+                                        console.log(isValid)
+
+                                    if(isValid){
+                                        $('#exportCelQDB2').form('load',{
+                                            column1:data.rows[s].column1,
+                                            column2:data.rows[s].column2,
+                                            column3:data.rows[s].column3,
+                                            column4:data.rows[s].column4,
+                                            column5:data.rows[s].column5,
+                                            column6:data.rows[s].column6,
+                                            column7:data.rows[s].column7,
+                                            column8:data.rows[s].column8,
+                                            column9:data.rows[s].column9,
+
+                                        });
+
+
+                                    }else {
+                                        // $('#exportCelQDB2').form('load',{
+                                        //     column1:data.rows[s].column1,
+                                        //     column2:data.rows[s].column2,
+                                        //     column3:data.rows[s].column3,
+                                        //     column4:data.rows[s].column4,
+                                        //     column5:data.rows[s].column5,
+                                        //     column6:data.rows[s].column6,
+                                        //     column7:data.rows[s].column7,
+                                        //     column8:data.rows[s].column8,
+                                        //     column9:data.rows[s].column9,
+                                        //
+                                        // });
+                                        // alert("第"+(s)+"条有错误")
+                                        console.log("第"+(s-1)+"条有错误")
+                                        break;
+
+                                    }
+
+
+                                }
+
+                               if (data.total==s){
+
+                               }
+
+                           }
 
                         })
+
+
+
+
+
                     }}
             ],
             // 显示分页条
             pagination:true
         });
-        $('#addyanzheng').linkbutton('enable');
+
+
     //增加
     function upload() {
 
@@ -276,6 +442,7 @@
                         $("#exportExcelQDB").dialog('close');	//关闭弹出框
                         $('#exportExcelQDB').form('clear');		//情空弹出框的表单
                         $('#mytable').datagrid('reload')
+
                     }
                 })
             }else {

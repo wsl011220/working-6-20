@@ -62,6 +62,8 @@ public class TableController {
     }
     @RequestMapping ("/daoru")
     public Result daoru() {
+
+
         Result result = new Result();
         String filename = "D:\\user1.xlsx";
         File file = new File(filename);
@@ -72,6 +74,7 @@ public class TableController {
             file.mkdirs();
         }
        List<Table> list = new ArrayList<>();
+        int total=0;
         // 读取excel
         EasyExcel.read(filename, Table.class, new AnalysisEventListener<Table>() {
             // 每解析一行数据,该方法会被调用一次
@@ -86,36 +89,20 @@ public class TableController {
             @Override
             public void doAfterAllAnalysed(AnalysisContext analysisContext) {
                 System.out.println("解析完成...");
-
+                Integer totalCount = analysisContext.getCurrentRowNum();
+                result.setTotal(totalCount);
                 // 可以将解析的数据保存到数据库
             }
         }).sheet().doRead();
 
-//        System.out.println("-------------"+list);
-        for (Table a:list
-             ) {
-            System.out.println(list);
-        }
-           result.setRows(list);
+        result.setRows(list);
          return result;
 
     }
-
-
-
-
-
 
     @RequestMapping("/finds")
     public Result finds(Integer page,Integer rows) {
         page=page-1;
         return tableService.finds(page,rows);
     }
-
-
-
-
-
-
-
 }
