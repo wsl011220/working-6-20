@@ -1,4 +1,4 @@
-package com.wsl.Util;
+package com.wsl.util;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
@@ -19,10 +19,10 @@ public  class Util {
         // 如果路径不存在
         if (!file.exists()) {
             // 创建多级路径
-            file.mkdirs();
+             file.mkdirs();
         }
         List<Table> list = new ArrayList<>();
-        int total=0;
+
         // 读取excel
         EasyExcel.read(filename, Table.class, new AnalysisEventListener<Table>() {
             // 每解析一行数据,该方法会被调用一次
