@@ -39,21 +39,23 @@ public class TableServiceImpl implements TableService {
 
     @Override
     public Result insertorupdate(Table table) {
-
+        Result result = new Result();
         Optional<Table> byId = tableDao.findById(table.getColumn1());
 
+
         if(byId.isPresent()){
-            Result result = new Result();
+
             table.setUpdatetime(new Date());
-            Table save = tableDao.save(table);
+            tableDao.save(table);
         }else {
-          Result result = new Result();
+
             table.setCreatetime(new Date());
-            Table save = tableDao.save(table);
+            tableDao.save(table);
+
         }
 
 
-        return new Result();
+        return result;
     }
 
     @Override
