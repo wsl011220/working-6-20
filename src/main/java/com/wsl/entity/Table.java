@@ -1,6 +1,6 @@
 package com.wsl.entity;
 
-import com.alibaba.excel.annotation.ExcelIgnore;
+
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

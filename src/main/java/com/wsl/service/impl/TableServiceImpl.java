@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
 
 
@@ -23,13 +23,13 @@ public class TableServiceImpl implements TableService {
     @Autowired
     TableDao tableDao;
 
-    @Override
-    public Result find() {
-        Result result = new Result();
-        result.setRows(tableDao.findAll());
-
-        return result ;
-    }
+//    @Override
+//    public Result find() {
+//        Result result = new Result();
+//        result.setRows(tableDao.findAll());
+//
+//        return result ;
+//    }
 
     @Override
     public Result delete(Integer id) {
@@ -58,15 +58,15 @@ public class TableServiceImpl implements TableService {
         return result;
     }
 
-    @Override
-    public Result update(Table table) {
-        tableDao.save(table);
-        return new Result();
-    }
+//    @Override
+//    public Result update(Table table) {
+//        tableDao.save(table);
+//        return new Result();
+//    }
 
     @Override
     public List<Table> daochu() {
-        List<Table> tableExcels = new ArrayList<>();
+        List<Table> tableExcels;
         tableExcels = tableDao.findAll();
 
 
@@ -78,7 +78,7 @@ public class TableServiceImpl implements TableService {
     @Override
     public Result finds(Integer pageNum, Integer pageSize) {
 
-        Pageable pageable = PageRequest.of(pageNum,pageSize);
+//        Pageable pageable = PageRequest.of(pageNum,pageSize);
         PageRequest pageReques = PageRequest.of(pageNum, pageSize);
 
         Page<List<Table>> s = tableDao.findS(pageReques);

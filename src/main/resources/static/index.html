@@ -108,8 +108,7 @@
 
 </body>
 <script type="text/javascript">
-
-
+<!--    中文转拼音-->
     $('#jiazai').textbox({
         onChange: function(value) {
             console.log("ssss")
@@ -122,20 +121,7 @@
             // fee();
         }
     });
-        // function myFunction(){
-    //
-    //     console.log("sss")
-    //          var value  = $('#column2').textbox('getValue')
-    //     console.log(value)
-    //             $('#column3').textbox('setValue',value);
-    // }
-    // $('#column3').datetimebox({
-    //     onClickButton: function() {
-    //      var value  = $('#column2').textbox('getValue')
-    //         alert(value)
-    //         $('#column3').textbox('setValue',value);
-    //     }
-    // });
+<!--  加载页面-->
         //页面加载完成后，创建数据表格datagrid
         $("#mytable").datagrid({
 
@@ -166,6 +152,7 @@
             selectOnCheck:false,
             //定义工具栏
             toolbar:[
+                <!-- 添加按钮-->
                 {text:'添加',iconCls:'icon-add',
                     //为按钮绑定单击事件
                     handler:function(){
@@ -181,6 +168,7 @@
 
                     }
                 },
+                <!-- 删除按钮-->
                 {text:'删除',iconCls:'icon-remove',
 
                     //为按钮绑定单击事件
@@ -225,6 +213,7 @@
                     }
 
                 },
+                <!-- 修改按钮-->
                 {text:'修改',iconCls:'icon-edit',
                     //为按钮绑定单击事件
                     handler:function(){
@@ -250,6 +239,7 @@
 
 
                     }},
+                <!-- 导出按钮-->
                 {text:'导出',iconCls:'icon-print',
 
                     handler:function(){
@@ -267,6 +257,7 @@
 
                         })
                     }},
+                <!-- 导入按钮-->
                 {text:'导入',iconCls:'icon-print',
                     handler:function(){
 
@@ -278,6 +269,7 @@
                             // 这两个参数必须写
                             contentType: false,
                             processData: false,
+                           // 导入后遍历数据并验证数据合法性
                            success:function (data) {
                                $('#exportCelQDB').form('load',{
                                    column1:data.rows[0].column1,
@@ -322,15 +314,16 @@
                                             column9:data.rows[s].column9,
 
                                         });
-                                        // alert("第"+(s)+"条有错误")
+                                        alert("第"+(s)+"条有错误")
                                         // // console.log("第"+(s)+"条有错误")
-                                        // break;
+                                        break;
 
                                     }
 
 
                                 }
-                            console.log(data.rows)
+                            // console.log(data.rows)
+                            //如果所有数据合法，就添加到数据库
                                if (data.total==s){
 
                                    $.ajax({
@@ -343,9 +336,8 @@
                                        processData: false,
                                        success: function () {
                                            alert("成功");
-                                           // $("#exportExcelQDB").dialog('close');	//关闭弹出框
-                                           // $('#exportExcelQDB').form('clear');		//情空弹出框的表单
-                                           // $('#mytable').datagrid('reload')
+
+                                           $('#mytable').datagrid('reload')
 
                                        }
                                    })
@@ -370,8 +362,8 @@
     function upload() {
 
         $("#addyanzheng").click(function(){
-            //ff为表单id。所有数据符合校验要求时，isValid 返回true。
-            //var isValid = $("#this").form('validate');
+
+            //验证表单内数据合法性，合法就为true，反之为false
             var isValid = $("#exportCelQDB").form('validate');
 
 
@@ -402,7 +394,7 @@
         });
 
     }
-    //身份证号码
+    //验证身份证号码的方法
     function identityValidate(value) {
         var city={11:"北京",12:"天津",13:"河北",14:"山西",15:"内蒙古",21:"辽宁",22:"吉林",23:"黑龙江 ",31:"上海",
             32:"江苏",33:"浙江",34:"安徽",35:"福建",36:"江西",37:"山东",41:"河南",42:"湖北 ",43:"湖南",
@@ -457,7 +449,7 @@
             message: '身份证号码格式不正确'
         }
     });
-    // 手机号
+    //   验证手机号的方法
     $.extend($.fn.validatebox.defaults.rules, {
         phoneNum: { //验证手机号
             validator: function(value, param){
