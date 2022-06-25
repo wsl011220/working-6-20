@@ -6,6 +6,7 @@ import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 
 import com.wsl.Result.Result;
+import com.wsl.Util.Util;
 import com.wsl.entity.Table;
 
 import com.wsl.service.TableService;
@@ -62,41 +63,42 @@ public class TableController {
     }
     @RequestMapping ("/daoru")
     public Result daoru() {
+        Util util = new Util();
 
-
-        Result result = new Result();
-        String filename = "D:\\user1.xlsx";
-        File file = new File(filename);
-
-        // 如果路径不存在
-        if (!file.exists()) {
-            // 创建多级路径
-            file.mkdirs();
-        }
-       List<Table> list = new ArrayList<>();
-        int total=0;
-        // 读取excel
-        EasyExcel.read(filename, Table.class, new AnalysisEventListener<Table>() {
-            // 每解析一行数据,该方法会被调用一次
-            @Override
-            public void invoke(Table table, AnalysisContext analysisContext) {
-                list.add(table);
-                System.out.println("解析数据为:" + table.toString());
-
-            }
-            // 全部解析完成被调用
-
-            @Override
-            public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-                System.out.println("解析完成...");
-                Integer totalCount = analysisContext.getCurrentRowNum();
-                result.setTotal(totalCount);
-                // 可以将解析的数据保存到数据库
-            }
-        }).sheet().doRead();
-
-        result.setRows(list);
-         return result;
+          return  util.daoru();
+//        Result result = new Result();
+//        String filename = "D:\\user1.xlsx";
+//        File file = new File(filename);
+//
+//        // 如果路径不存在
+//        if (!file.exists()) {
+//            // 创建多级路径
+//            file.mkdirs();
+//        }
+//       List<Table> list = new ArrayList<>();
+//        int total=0;
+//        // 读取excel
+//        EasyExcel.read(filename, Table.class, new AnalysisEventListener<Table>() {
+//            // 每解析一行数据,该方法会被调用一次
+//            @Override
+//            public void invoke(Table table, AnalysisContext analysisContext) {
+//                list.add(table);
+//                System.out.println("解析数据为:" + table.toString());
+//
+//            }
+//            // 全部解析完成被调用
+//
+//            @Override
+//            public void doAfterAllAnalysed(AnalysisContext analysisContext) {
+//                System.out.println("解析完成...");
+//                Integer totalCount = analysisContext.getCurrentRowNum();
+//                result.setTotal(totalCount);
+//                // 可以将解析的数据保存到数据库
+//            }
+//        }).sheet().doRead();
+//
+//        result.setRows(list);
+//         return result;
 
     }
 
@@ -104,5 +106,17 @@ public class TableController {
     public Result finds(Integer page,Integer rows) {
         page=page-1;
         return tableService.finds(page,rows);
+    }
+    @RequestMapping ("/inserts")
+    public void inserts() {
+        Util util = new Util();
+        List<Table> list = util.daoru2();
+
+        for (int i=0;i<list.size();i++){
+            tableService.insertorupdate(list.get(i));
+        }
+
+
+//        tableService.inserts((List<Table>) daoru.getRows());
     }
 }

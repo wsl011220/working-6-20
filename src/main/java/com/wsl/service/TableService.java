@@ -17,4 +17,5 @@ public interface TableService {
 
     List<Table> daochu();
     Result finds(Integer pageNum,Integer pageSize);
+
 }
