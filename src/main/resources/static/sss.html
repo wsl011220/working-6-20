@@ -102,10 +102,21 @@
 
 </div>
 
+
 <div id="dd"  class="easyui-dialog" closed="true" title="error" style="width:400px;height:200px;"
      data-options="iconCls:'icon-save',resizable:true,modal:true" >
-
 </div>
+<div id="tb1" class="easyui-dialog" closed="true">
+    <input id="tb2"  type="text"  style="width:300px">
+</div>
+
+<div id="daochuwz1" class="easyui-dialog" closed="true">
+    <input id="daochuwz2"  type="file"  style="width:300px">
+</div>
+<div id="daoru1" class="easyui-dialog" closed="true">
+    <input id="daoru2"  type="file" value="请选择文件" style="width:300px">
+</div>
+
 
 
 
@@ -114,10 +125,131 @@
 </body>
 <script type="text/javascript">
 
+
+
+
+// function getPathText() {
+//     var objModel = $('#daoru2').val();
+//     if (objModel == '') {
+//         console.log('请选择文件');
+//     } else {
+//         console.log(objModel);
+//         var valText = objModel.split('.');
+//         console.log(valText);
+//         console.log(valText[1]);
+//         if (valText[1] == 'xlsx' || valText[1] == 'xls') {
+//             console.log('格式正确');
+//         }
+//         else {
+//             console.log('请选择Excel数据表');
+//         }
+//     }
+// }
+
+
+$("#daoru1").dialog({
+        title:'请输入导入位置'
+    })
+    $('#daoru2').textbox({
+
+        buttonText:'导入',
+        iconCls:'icon-save',
+        iconAlign:'left',
+        onClickButton:function (){
+            // $("#daoru1").dialog('close');
+            $('#exportExcelQDB').form('clear');
+           var obj= $('#daoru2').filebox('getValue')
+
+
+
+            $.ajax({
+                url: "/daoru?filename="+filename,
+                type: "get",
+                // dataType: "json",
+
+                // 这两个参数必须写
+                contentType: false,
+                processData: false,
+                // 导入后遍历数据并验证数据合法性
+                success:function (data) {
+                    var  cuowu=0;
+                    var cuowus =new Array ;
+                    for (var s=0;s<data.total;s++){
+
+                        $('#exportCelQDB').form('load',{
+                            column1:data.rows[s].column1,
+                            column2:data.rows[s].column2,
+                            column3:data.rows[s].column3,
+                            column4:data.rows[s].column4,
+                            column5:data.rows[s].column5,
+                            column6:data.rows[s].column6,
+                            column7:data.rows[s].column7,
+                            column8:data.rows[s].column8,
+                            column9:data.rows[s].column9,
+                        })
+                        var isValid = $("#exportCelQDB").form('validate');
+                        if(isValid){
+                            console.log("第"+(s+1)+"条成功")
+                        }else{
+                            console.log("第"+(s+1)+"条数据不合法")
+                            cuowus[cuowu]= "第"+(s+1)+"条数据不合法"
+                            cuowu++;
+                        }
+                        $('#exportExcelQDB').form('clear');
+                    }
+                    //检验数据是否重复
+                    for (var s=0;s<data.total;s++){
+                        for (var a=s+1;a<data.total;a++){
+                            if (data.rows[s].column6==data.rows[a].column6){
+                                cuowus[cuowu]= "第"+(s+1)+"条数据与第"+(a+1)+"条身份证号相同"
+                                cuowu++
+                            }
+                            if (data.rows[s].column8==data.rows[a].column8){
+                                cuowus[cuowu]= "第"+(s+1)+"条数据与第"+(a+1)+"条手机号相同"
+                                cuowu++
+                            }
+                        }
+                    }
+                    //如果数据有错误就弹框出来具体错误信息
+                    if (cuowu>0){
+                        $("#dd").dialog('open');
+                        $('#dd').dialog({
+
+                            width: 400,
+                            height: 200,
+                            closed: false,
+                            cache: false,
+                            content:cuowus.join(",   "),
+                            modal: true
+                        })
+                    }
+
+                    //如果所有数据合法，就添加到数据库
+                    if (cuowu==0){
+                        $.ajax({
+                            url: "/inserts?filename="+$('#daoru2').val(),
+                            type: "get",
+                            // data:{ 'mydata':$('#exportCelQDB').serialize()},
+                            // dataType: "json",
+                            // 这两个参数必须写
+                            contentType: false,
+                            processData: false,
+                            success: function () {
+                                alert("成功");
+                                $('#mytable').datagrid('reload')
+                            }
+                        })
+                    }
+                }
+            })
+        }
+
+    })
+
+
     <!--  加载页面-->
     //页面加载完成后，创建数据表格datagrid
     $("#mytable").datagrid({
-
         //定义标题行所有的列
         columns:[[
             {field:'ck',checkbox:true},
@@ -132,14 +264,12 @@
             {title:'电子邮箱',field:'column9'},
             // {title:'createtime',field:'createtime'},
             // {title:'updatetime',field:'updatetime'},
-
         ]],
         frozenColumns:{title:'修改'},
         //指定数据表格发送ajax请求的地址
         url:'http://localhost:8080/finds',
         rownumbers:true,
         singleSelect:true,
-
         // getSelection
         // checkbox:true,
         selectOnCheck:false,
@@ -159,37 +289,30 @@
                             var fullName = pinyin.getFullChars(value);
                             console.log(fullName)
                             $("#shezhi").textbox('setValue', fullName);
-
                         }
                     });
                     //自动加载日期和男女
                     $('#jiazai2').textbox({
                         onChange: function() {
                             var value  = $('#jiazai2').textbox('getValue')
-
                             if(parseInt(value.substr(16,1)) % 2 == 1){
                                 $("#shezhixingbie").textbox('setValue', '男');
                             }else{
                                 $("#shezhixingbie").textbox('setValue', '女');
                             }
                             var  birthday = value.substring(6, 10) + "-" + value.substring(10, 12) + "-" + value.substring(12, 14);
-
                             $('#exportCelQDB').form('load',{
                                 column7:birthday})
                         }
                     });
                     $('#exportExcelQDB').form('clear');		//情空弹出框的表单
-
-
                 }
             },
             <!-- 删除按钮-->
             {text:'删除',iconCls:'icon-remove',
-
                 //为按钮绑定单击事件
                 handler:function(){
                     //添加事件批量删除
-
                     //datagrid控件（方法中的getSelections）获取对应所以的数据rows
                     var rows=$('#mytable').datagrid('getChecked');
                     // console.log(rows);
@@ -200,33 +323,22 @@
                             array.push(rows[i].column1);
                         }
                     }
-
                     if(array.length>0){
-
                         $.ajax({
                             //同时还要把bid带过去
                             url:'/delete',
-                            data: {
-                                "ids": array
-                            },
+                            data: {"ids": array},
                             type: "post",
                             dataType: "json",
                             success: function () {
                                 $('#mytable').datagrid('reload')
                                 alert("删除成功");
-
                             }
-
                         });
-
                     }
                     $('#mytable').datagrid('clearChecked')
-                    $('#mytable').datagrid('reload')
-                    ;
-
-
+                    $('#mytable').datagrid('reload');
                 }
-
             },
             <!-- 修改按钮-->
             {text:'修改',iconCls:'icon-edit',
@@ -245,7 +357,6 @@
                         column7:rows[0].column7,
                         column8:rows[0].column8,
                         column9:rows[0].column9,
-
                     });
                     <!--    中文转拼音-->
                     $('#jiazai').textbox({
@@ -254,248 +365,131 @@
                             var fullName = pinyin.getFullChars(value);
                             console.log(fullName)
                             $("#shezhi").textbox('setValue', fullName);
-
                         }
                     });
                     //自动加载日期和男女
                     $('#jiazai2').textbox({
                         onChange: function() {
                             var value  = $('#jiazai2').textbox('getValue')
-
                             if(parseInt(value.substr(16,1)) % 2 == 1){
                                 $("#shezhixingbie").textbox('setValue', '男');
                             }else{
                                 $("#shezhixingbie").textbox('setValue', '女');
                             }
                             var  birthday = value.substring(6, 10) + "-" + value.substring(10, 12) + "-" + value.substring(12, 14);
-
                             $('#exportCelQDB').form('load',{
                                 column7:birthday})
                         }
                     });
-
-
-
-
-
                 }},
             <!-- 导出按钮-->
             {text:'导出',iconCls:'icon-print',
-
                 handler:function(){
-                    $.ajax({
-                        url: "/daochu",
-                        type: "get",
+                    $("#daochuwz1").dialog('open');
 
-
-                        // 这两个参数必须写
-                        contentType: false,
-                        processData: false,
-                        success :function (){
-                            alert("导出成功，路径为D:\\user1.xlsx")
-                        }
-
-                    })
                 }},
             {text:'下载模板',iconCls:'icon-print',
                 handler:function(){
-                    $.ajax({
-                        url: "/xiazaimuban",
-                        type: "get",
+                    $("#tb1").dialog('open');
 
-
-                        // 这两个参数必须写
-                        contentType: false,
-                        processData: false,
-                        success :function (){
-                            alert("下载成功，路径为D:\\user1.xlsx")
-                        }
-
-                    })
                 }},
             <!-- 导入按钮-->
             {text:'导入',iconCls:'icon-print',
                 handler:function(){
-                    $('#exportExcelQDB').form('clear');
-                    $.ajax({
-                        url: "/daoru",
-                        type: "get",
-                        dataType: "json",
-
-                        // 这两个参数必须写
-                        contentType: false,
-                        processData: false,
-                        // 导入后遍历数据并验证数据合法性
-                        success:function (data) {
-                            // $('#exportCelQDB').form('load',{
-                            //     column1:data.rows[0].column1,
-                            //     column2:data.rows[0].column2,
-                            //     column3:data.rows[0].column3,
-                            //     column4:data.rows[0].column4,
-                            //     column5:data.rows[0].column5,
-                            //     column6:data.rows[0].column6,
-                            //     column7:data.rows[0].column7,
-                            //     column8:data.rows[0].column8,
-                            //     column9:data.rows[0].column9,});
-                            var  cuowu=0;
-                            var cuowus =new Array ;
-
-
-
-                            for (var s=0;s<data.total;s++){
-
-                                // var isValid = $("#exportCelQDB").form('validate');
-                                // console.log(isValid)
-                                // if(isValid){
-                                    $('#exportCelQDB').form('load',{
-                                        column1:data.rows[s].column1,
-                                        column2:data.rows[s].column2,
-                                        column3:data.rows[s].column3,
-                                        column4:data.rows[s].column4,
-                                        column5:data.rows[s].column5,
-                                        column6:data.rows[s].column6,
-                                        column7:data.rows[s].column7,
-                                        column8:data.rows[s].column8,
-                                        column9:data.rows[s].column9,
-                                    })
-                                var isValid = $("#exportCelQDB").form('validate');
-                                console.log(isValid)
-                                console.log(s)
-                                if(isValid){
-
-
-                                    console.log("第"+(s+1)+"条成功")
-                                }else{
-                                    console.log("第"+(s+1)+"条数据不合法")
-
-                                        cuowus[cuowu]= "第"+(s+1)+"条数据不合法"
-                                    cuowu++;
-                                }
-                                //
-                                //     });
-                                //     console.log("第"+(s)+"条成功")
-                                //
-                                // }else {
-                                //     cuowu++;
-                                //     cuowus[cuowu]= "第"+(s)+"条数据不合法"
-                                //
-                                //     $('#exportCelQDB').form('load',{
-                                //         column1:data.rows[s].column1,
-                                //         column2:data.rows[s].column2,
-                                //         column3:data.rows[s].column3,
-                                //         column4:data.rows[s].column4,
-                                //         column5:data.rows[s].column5,
-                                //         column6:data.rows[s].column6,
-                                //         column7:data.rows[s].column7,
-                                //         column8:data.rows[s].column8,
-                                //         column9:data.rows[s].column9,
-                                //
-                                //     });
-
-
-
-
-
-                                    // }
-                                    // if (s==data.total-1){
-                                    //
-                                    //     var isValid = $("#exportCelQDB").form('validate');
-                                    //     console.log(isValid)
-                                    //     if(!isValid){
-                                    //         cuowu++
-                                    //         cuowus[cuowu]= "第"+(data.total)+"条数据不合法"
-                                    //
-                                    //     }else {
-                                    //         console.log("第"+(data.total)+"条成功")
-                                    //     }
-
-
-
-
-                            }
-
-
-
-
-                            for (var s=0;s<data.total;s++){
-                                for (var a=s+1;a<data.total;a++){
-                                    if (data.rows[s].column6==data.rows[a].column6){
-
-                                        cuowus[cuowu]= "第"+(s+1)+"条数据与第"+(a+1)+"条身份证号相同"
-                                        cuowu++
-                                    }
-                                    if (data.rows[s].column8==data.rows[a].column8){
-
-                                        cuowus[cuowu]= "第"+(s+1)+"条数据与第"+(a+1)+"条手机号相同"
-                                        cuowu++
-                                    }
-                                }
-                            }
-
-
-                            if (cuowu>0){
-                                $("#dd").dialog('open');
-                                $('#dd').dialog({
-
-                                    width: 400,
-                                    height: 200,
-                                    closed: false,
-                                    cache: false,
-                                    content:cuowus.join(",   "),
-                                    modal: true
-                                })
-
-
-                            }
-                            $('#exportExcelQDB').form('clear');
-                            //如果所有数据合法，就添加到数据库
-                            if (cuowu==0){
-
-                                $.ajax({
-                                    url: "/inserts",
-                                    type: "post",
-                                    data:{ 'mydata':$('#exportCelQDB').serialize()},
-                                    // dataType: "json",
-                                    // 这两个参数必须写
-                                    contentType: false,
-                                    processData: false,
-                                    success: function () {
-                                        alert("成功");
-
-                                        $('#mytable').datagrid('reload')
-
-                                    }
-                                })
-                            }
-
-                        }
-
-                    })
-
-
-
-
-
+                    $("#daoru1").dialog('open');
+                    // $('#exportExcelQDB').form('clear');
+                    // $.ajax({
+                    //     url: "/daoru",
+                    //     type: "get",
+                    //     dataType: "json",
+                    //     // 这两个参数必须写
+                    //     contentType: false,
+                    //     processData: false,
+                    //     // 导入后遍历数据并验证数据合法性
+                    //     success:function (data) {
+                    //         var  cuowu=0;
+                    //         var cuowus =new Array ;
+                    //         for (var s=0;s<data.total;s++){
+                    //
+                    //             $('#exportCelQDB').form('load',{
+                    //                 column1:data.rows[s].column1,
+                    //                 column2:data.rows[s].column2,
+                    //                 column3:data.rows[s].column3,
+                    //                 column4:data.rows[s].column4,
+                    //                 column5:data.rows[s].column5,
+                    //                 column6:data.rows[s].column6,
+                    //                 column7:data.rows[s].column7,
+                    //                 column8:data.rows[s].column8,
+                    //                 column9:data.rows[s].column9,
+                    //             })
+                    //             var isValid = $("#exportCelQDB").form('validate');
+                    //             if(isValid){
+                    //                 console.log("第"+(s+1)+"条成功")
+                    //             }else{
+                    //                 console.log("第"+(s+1)+"条数据不合法")
+                    //                 cuowus[cuowu]= "第"+(s+1)+"条数据不合法"
+                    //                 cuowu++;
+                    //             }
+                    //             $('#exportExcelQDB').form('clear');
+                    //         }
+                    //         //检验数据是否重复
+                    //         for (var s=0;s<data.total;s++){
+                    //             for (var a=s+1;a<data.total;a++){
+                    //                 if (data.rows[s].column6==data.rows[a].column6){
+                    //                     cuowus[cuowu]= "第"+(s+1)+"条数据与第"+(a+1)+"条身份证号相同"
+                    //                     cuowu++
+                    //                 }
+                    //                 if (data.rows[s].column8==data.rows[a].column8){
+                    //                     cuowus[cuowu]= "第"+(s+1)+"条数据与第"+(a+1)+"条手机号相同"
+                    //                     cuowu++
+                    //                 }
+                    //             }
+                    //         }
+                    //         //如果数据有错误就弹框出来具体错误信息
+                    //         if (cuowu>0){
+                    //             $("#dd").dialog('open');
+                    //             $('#dd').dialog({
+                    //
+                    //                 width: 400,
+                    //                 height: 200,
+                    //                 closed: false,
+                    //                 cache: false,
+                    //                 content:cuowus.join(",   "),
+                    //                 modal: true
+                    //             })
+                    //         }
+                    //
+                    //         //如果所有数据合法，就添加到数据库
+                    //         if (cuowu==0){
+                    //             $.ajax({
+                    //                 url: "/inserts",
+                    //                 type: "post",
+                    //                 data:{ 'mydata':$('#exportCelQDB').serialize()},
+                    //                 // dataType: "json",
+                    //                 // 这两个参数必须写
+                    //                 contentType: false,
+                    //                 processData: false,
+                    //                 success: function () {
+                    //                     alert("成功");
+                    //                     $('#mytable').datagrid('reload')
+                    //                 }
+                    //             })
+                    //         }
+                    //     }
+                    // })
                 }}
         ],
         // 显示分页条
         pagination:true
     });
 
-
     //增加
     function upload() {
-
         $("#addyanzheng").click(function(){
-
             //验证表单内数据合法性，合法就为true，反之为false
             var isValid = $("#exportCelQDB").form('validate');
-
-
             if(isValid){
-
                 var data = $('#exportCelQDB').serialize()
-
                 $.ajax({
                     url: "/insert",
                     type: "get",
@@ -509,7 +503,6 @@
                         $("#exportExcelQDB").dialog('close');	//关闭弹出框
                         $('#exportExcelQDB').form('clear');		//情空弹出框的表单
                         $('#mytable').datagrid('reload')
-
                     }
                 })
             }else {
@@ -517,8 +510,8 @@
                 alert("验证失败")
             }
         });
-
     }
+
     //验证身份证号码的方法
     function identityValidate(value) {
         var city={11:"北京",12:"天津",13:"河北",14:"山西",15:"内蒙古",21:"辽宁",22:"吉林",23:"黑龙江 ",31:"上海",
@@ -527,12 +520,10 @@
             62:"甘肃",63:"青海",64:"宁夏",65:"新疆",71:"台湾",81:"香港",82:"澳门",91:"国外 "};
         var tip = "";
         var pass= true;
-
         if (!value || !/^[1-9][0-9]{5}(19[0-9]{2}|200[0-9]|2010)(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])[0-9]{3}[0-9xX]$/i.test(value)) {
             tip = "身份证号格式错误";
             pass = false;
         }
-
         else if(!city[value.substr(0,2)]){
             tip = "地址编码错误";
             pass = false;
@@ -582,10 +573,6 @@
             },
             message: '请输入正确的手机号码。'
         },
-
     });
-
-
-
 </script>
 </html>

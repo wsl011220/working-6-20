@@ -1,14 +1,12 @@
 package com.wsl.controller;
 
 import com.alibaba.excel.EasyExcel;
-import com.wsl.Result.Result;
+import com.wsl.Vo.Result;
 import com.wsl.entity.Table;
 import com.wsl.service.TableService;
 import com.wsl.util.EasyExcelUtil;
 import com.wsl.util.TitleHandler;
 import com.wsl.util.Util;
-import org.apache.poi.ss.formula.functions.T;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,32 +32,43 @@ public class TableController {
     }
     @RequestMapping ("/insert")
     public Result insertorupdate(Table table) {
-        return tableService.insertorupdate(table);
+        Result result=new Result();
+        if (table.getColumn1().equals("")&& table.getColumn1()==null&&
+                table.getColumn2().equals("")&&table.getColumn2()==null&&
+                table.getColumn3().equals("")&&table.getColumn3()==null&&
+                table.getColumn4().equals("")&&table.getColumn4()==null&&
+                table.getColumn5().equals("")&&table.getColumn5()==null&&
+                table.getColumn6().equals("")&&table.getColumn6()==null&&
+                table.getColumn7().equals("")&&table.getColumn7()==null&&
+                table.getColumn8().equals("")&&table.getColumn8()==null&&
+                table.getColumn9().equals("")&&table.getColumn9()==null  ){
+
+        }else {
+           result = tableService.insertorupdate(table);
+        }
+        return result;
     }
     @RequestMapping ("/daochu")
-    public void daochu() {
-        String filename = "D:\\user1.xlsx";
-        File file = new File(filename);
+    public void daochu(String filename) {
 
+        File file = new File(filename);
+        String path="用户";
         // 如果路径不存在
         if (!file.exists()) {
             // 创建多级路径
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            file.mkdirs();
+//                file.createNewFile();
         }
-        System.out.println(tableService.daochu());
+        file= new File(filename +"/"+path+".xlsx");
         // 向Excel中写入数据 也可以通过 head(Class<?>) 指定数据模板
-        EasyExcel.write(filename, Table.class)
+        EasyExcel.write(file, Table.class)
                 .sheet("用户信息")
                 .doWrite(tableService.daochu());
     }
     @RequestMapping ("/daoru")
-    public Result daoru() {
+    public Result daoru(String filename) {
         Util util = new Util();
-          return  util.daoru();
+          return  util.daoru(filename);
     }
     @RequestMapping("/finds")
     public Result finds(Integer page,Integer rows) {
@@ -67,17 +76,27 @@ public class TableController {
         return tableService.finds(page,rows);
     }
     @RequestMapping ("/inserts")
-    public void inserts() {
+    public void inserts(String filename) {
         Util util = new Util();
-        List<Table> list = util.daoru2();
+        List<Table> list = util.daoru2(filename);
 
         for (int i=0;i<list.size();i++){
             tableService.insertorupdate(list.get(i));
         }
     }
     @RequestMapping("/xiazaimuban")
-    public void xiazaimuban()  throws IOException{
-        OutputStream outputStream = new FileOutputStream(new File("D:\\user1.xlsx"));
+    public void xiazaimuban( String filename)  throws IOException{
+
+        File file = new File(filename);
+                String path="用户";
+        // 如果路径不存在
+        if (!file.exists()) {
+            // 创建多级路径
+            file.mkdirs();
+//                file.createNewFile();
+        }
+        file= new File(filename +"/"+path+".xlsx");
+        OutputStream outputStream = new FileOutputStream(file);//D:/user1.xlsx
         // 导出的数据
         List<Table> dataList = new ArrayList<>();
         // 指定标红色的列

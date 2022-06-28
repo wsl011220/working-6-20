@@ -1,7 +1,7 @@
 package com.wsl.service.impl;
 
 
-import com.wsl.Result.Result;
+import com.wsl.Vo.Result;
 import com.wsl.dao.TableDao;
 import com.wsl.entity.Table;
 
