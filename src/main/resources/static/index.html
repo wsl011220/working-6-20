@@ -38,17 +38,19 @@
             <tr>
                 <td>姓名全拼</td>
                 <td>
-                    <input  id="shezhi" class="easyui-textbox"  data-options="prompt:'请输入姓名全拼'" name="column3" value="" >
+                    <input  id="shezhi" class="easyui-textbox"  data-options="prompt:'请输入姓名全拼',required:true" name="column3" value="" >
                 </td>
             </tr>
             <tr>
                 <td>性别</td>
                 <td>
-                    <select class="easyui-combobox" data-options="prompt:'请输入性别',required:true" name="column4" style="width:180px;">
+                    <select class="easyui-combobox"  id="shezhixingbie" data-options="prompt:'请输入性别',required:true" name="column4"  style="hight:50px;width:180px">
                         <option value="男">男</option>
                         <option value="女">女</option>
 
                     </select>
+
+
                 </td>
             </tr>
             <tr>
@@ -64,13 +66,13 @@
             <tr>
                 <td>身份证证件号</td>
                 <td>
-                    <input class="easyui-textbox" data-options="required:true,prompt:'请输入身份证号码',required:true,validType:'idcard'" name="column6" value="" >
+                    <input class="easyui-textbox" id="jiazai2" data-options="required:true,prompt:'请输入身份证号码',required:true,validType:'idcard'" name="column6" value="" >
                 </td>
             </tr>
             <tr>
                 <td>出生日期</td>
                 <td>
-                    <input   type="text" data-options="prompt:'请输入日期',required:true," class="easyui-datebox" required="required"  name="column7" value="" >
+                    <input   id="shezhiriqi" type="text" data-options="prompt:'请输入日期',required:true," class="easyui-datebox" required="required"  name="column7" value="" >
                 </td>
             </tr>
             <tr>
@@ -100,7 +102,10 @@
 
 </div>
 
+<div id="dd"  class="easyui-dialog" closed="true" title="error" style="width:400px;height:200px;"
+     data-options="iconCls:'icon-save',resizable:true,modal:true" >
 
+</div>
 
 
 
@@ -108,19 +113,7 @@
 
 </body>
 <script type="text/javascript">
-<!--    中文转拼音-->
-    $('#jiazai').textbox({
-        onChange: function(value) {
-            console.log("ssss")
-                     var value  = $('#jiazai').textbox('getValue')
-            console.log(value)
-            var fullName = pinyin.getFullChars(value);
 
-                console.log(fullName)
-            $("#shezhi").textbox('setValue', fullName);
-            // fee();
-        }
-    });
 <!--  加载页面-->
         //页面加载完成后，创建数据表格datagrid
         $("#mytable").datagrid({
@@ -137,8 +130,8 @@
                 {title:'出生日期',field:'column7'},
                 {title:'手机号码',field:'column8'},
                 {title:'电子邮箱',field:'column9'},
-                {title:'createtime',field:'createtime'},
-                {title:'updatetime',field:'updatetime'},
+                // {title:'createtime',field:'createtime'},
+                // {title:'updatetime',field:'updatetime'},
 
             ]],
             frozenColumns:{title:'修改'},
@@ -159,10 +152,32 @@
                         $('#mytable').datagrid('clearChecked')
                         //打开弹出框的方法
                         $("#exportExcelQDB").dialog('open');
+                        <!--    中文转拼音-->
+                        $('#jiazai').textbox({
+                            onChange: function(value) {
+                                var value  = $('#jiazai').textbox('getValue')
+                                var fullName = pinyin.getFullChars(value);
+                                console.log(fullName)
+                                $("#shezhi").textbox('setValue', fullName);
 
-                        // $('#exportExcelQDB').form('clear');		//情空弹出框的表单
-                        // $("#exportCelQDB1").form("load",obj);	//渲染数据到input框
-                        // $("#exportExcelQDB").dialog('close');	//关闭弹出框
+                            }
+                        });
+                         //自动加载日期和男女
+                        $('#jiazai2').textbox({
+                            onChange: function() {
+                                var value  = $('#jiazai2').textbox('getValue')
+
+                                if(parseInt(value.substr(16,1)) % 2 == 1){
+                                    $("#shezhixingbie").textbox('setValue', '男');
+                                }else{
+                                    $("#shezhixingbie").textbox('setValue', '女');
+                                }
+                                var  birthday = value.substring(6, 10) + "-" + value.substring(10, 12) + "-" + value.substring(12, 14);
+
+                                $('#exportCelQDB').form('load',{
+                                    column7:birthday})
+                            }
+                        });
                         $('#exportExcelQDB').form('clear');		//情空弹出框的表单
 
 
@@ -232,7 +247,32 @@
                             column9:rows[0].column9,
 
                         });
+                        <!--    中文转拼音-->
+                        $('#jiazai').textbox({
+                            onChange: function(value) {
+                                var value  = $('#jiazai').textbox('getValue')
+                                var fullName = pinyin.getFullChars(value);
+                                console.log(fullName)
+                                $("#shezhi").textbox('setValue', fullName);
 
+                            }
+                        });
+                        //自动加载日期和男女
+                        $('#jiazai2').textbox({
+                            onChange: function() {
+                                var value  = $('#jiazai2').textbox('getValue')
+
+                                if(parseInt(value.substr(16,1)) % 2 == 1){
+                                    $("#shezhixingbie").textbox('setValue', '男');
+                                }else{
+                                    $("#shezhixingbie").textbox('setValue', '女');
+                                }
+                                var  birthday = value.substring(6, 10) + "-" + value.substring(10, 12) + "-" + value.substring(12, 14);
+
+                                $('#exportCelQDB').form('load',{
+                                    column7:birthday})
+                            }
+                        });
 
 
 
@@ -257,10 +297,26 @@
 
                         })
                     }},
+                {text:'下载模板',iconCls:'icon-print',
+                    handler:function(){
+                        $.ajax({
+                            url: "/xiazaimuban",
+                            type: "get",
+
+
+                            // 这两个参数必须写
+                            contentType: false,
+                            processData: false,
+                            success :function (){
+                                alert("下载成功，路径为D:\\user1.xlsx")
+                            }
+
+                        })
+                    }},
                 <!-- 导入按钮-->
                 {text:'导入',iconCls:'icon-print',
                     handler:function(){
-
+                        $('#exportExcelQDB').form('clear');
                         $.ajax({
                             url: "/daoru",
                             type: "get",
@@ -281,11 +337,15 @@
                                    column7:data.rows[0].column7,
                                    column8:data.rows[0].column8,
                                    column9:data.rows[0].column9,});
-                             var  s;
-                                for ( s=1;s<data.total;s++){
-                                    var isValid = $("#exportCelQDB").form('validate');
-                                        console.log(isValid)
+                             var  cuowu=0;
+                               var cuowus =new Array ;
 
+
+
+                                for (var s=0;s<data.total;s++){
+
+                                    var isValid = $("#exportCelQDB").form('validate');
+                                    console.log(isValid)
                                     if(isValid){
                                         $('#exportCelQDB').form('load',{
                                             column1:data.rows[s].column1,
@@ -302,6 +362,9 @@
                                         console.log("第"+(s)+"条成功")
 
                                     }else {
+                                        cuowu++;
+                                    cuowus[cuowu]= "第"+(s)+"条数据不合法"
+
                                         $('#exportCelQDB').form('load',{
                                             column1:data.rows[s].column1,
                                             column2:data.rows[s].column2,
@@ -314,22 +377,70 @@
                                             column9:data.rows[s].column9,
 
                                         });
-                                        alert("第"+(s)+"条有错误")
-                                        // // console.log("第"+(s)+"条有错误")
-                                        break;
+
+
+
+
+
+                                    // }
+                                    // if (s==data.total-1){
+                                    //
+                                    //     var isValid = $("#exportCelQDB").form('validate');
+                                    //     console.log(isValid)
+                                    //     if(!isValid){
+                                    //         cuowu++
+                                    //         cuowus[cuowu]= "第"+(data.total)+"条数据不合法"
+                                    //
+                                    //     }else {
+                                    //         console.log("第"+(data.total)+"条成功")
+                                    //     }
 
                                     }
 
 
                                 }
-                            // console.log(data.rows)
-                            //如果所有数据合法，就添加到数据库
-                               if (data.total==s){
+
+
+
+
+                                for (var s=0;s<data.total;s++){
+                                    for (var a=s+1;a<data.total;a++){
+                                        if (data.rows[s].column6==data.rows[a].column6){
+
+                                            cuowus[cuowu]= "第"+(s+1)+"条数据与第"+(a+1)+"条身份证号相同"
+                                            cuowu++
+                                        }
+                                        if (data.rows[s].column8==data.rows[a].column8){
+
+                                            cuowus[cuowu]= "第"+(s+1)+"条数据与第"+(a+1)+"条手机号相同"
+                                            cuowu++
+                                        }
+                                    }
+                                }
+
+
+                                if (cuowu>0){
+                                    $("#dd").dialog('open');
+                                    $('#dd').dialog({
+
+                                        width: 400,
+                                        height: 200,
+                                        closed: false,
+                                        cache: false,
+                                        content:cuowus.join(",   "),
+                                        modal: true
+                                    })
+
+
+                                }
+                               $('#exportExcelQDB').form('clear');
+                               //如果所有数据合法，就添加到数据库
+                               if (cuowu==0){
 
                                    $.ajax({
                                        url: "/inserts",
                                        type: "post",
-                                       data:{ 'mydata':data.rows},
+                                       data:{ 'mydata':$('#exportCelQDB').serialize()},
                                        // dataType: "json",
                                        // 这两个参数必须写
                                        contentType: false,

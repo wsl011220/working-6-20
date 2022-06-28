@@ -1,6 +1,7 @@
 package com.wsl.entity;
 
 
+import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -58,10 +59,12 @@ public class Table {
     @Column(name = "Column_9")
     private String  column9;
 
+    @ExcelIgnore
     @Column(name = "createtime")
     @ExcelProperty("createtime")
     private Date    createtime;
 
+    @ExcelIgnore
     @Column(name = "updatetime")
     @ExcelProperty("updatetime")
     private Date   updatetime;

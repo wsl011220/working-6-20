@@ -7,6 +7,7 @@ import com.wsl.Result.Result;
 import com.wsl.entity.Table;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,11 @@ public  class Util {
         // 如果路径不存在
         if (!file.exists()) {
             // 创建多级路径
-             file.mkdirs();
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         List<Table> list = new ArrayList<>();
 
@@ -54,7 +59,11 @@ public  class Util {
         // 如果路径不存在
         if (!file.exists()) {
             // 创建多级路径
-            file.mkdirs();
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         List<Table> list = new ArrayList<>();
         int total=0;
