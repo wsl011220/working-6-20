@@ -8,29 +8,46 @@ import com.wsl.entity.Table;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public  class Util {
-    public  Result daoru(String filename){
-        Result result = new Result();
-
-        File file = new File(filename);
-
-        // 如果文件不存在
-        if (!file.exists()) {
-            // 创建文件
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+    public  Result daoru(MultipartFile multipartFile){
+        //文件上传前的名称
+        String fileName = multipartFile.getOriginalFilename();
+        File file = new File(fileName);
+        OutputStream out = null;
+        try{
+            //获取文件流，以文件流的方式输出到新文件
+//    InputStream in = multipartFile.getInputStream();
+            out = new FileOutputStream(file);
+            byte[] ss = multipartFile.getBytes();
+            for(int i = 0; i < ss.length; i++){
+                out.write(ss[i]);
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+        }finally {
+            if (out != null){
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
+        Result result = new Result();
+
+
+
+        System.out.println(file);
         List<Table> list = new ArrayList<>();
 
-        // 读取excel
-        EasyExcel.read(filename, Table.class, new AnalysisEventListener<Table>() {
+        // 读取excelf
+        EasyExcel.read(file, Table.class, new AnalysisEventListener<Table>() {
             // 每解析一行数据,该方法会被调用一次
             @Override
             public void invoke(Table table, AnalysisContext analysisContext) {
@@ -48,27 +65,44 @@ public  class Util {
                 // 可以将解析的数据保存到数据库
             }
         }).sheet().doRead();
+        File f = new File(file.toURI());
+        if (f.delete()){
+            System.out.println("删除成功");
+        }else {
+            System.out.println("删除失败");
+        }
 
         result.setRows(list);
         return result;
     }
-    public  List<Table> daoru2(String filename){
+    public  List<Table> daoru2(MultipartFile multipartFile){
         Result result = new Result();
-        File file = new File(filename);
-        System.out.println(file);
-        // 如果路径不存在
-        if (!file.exists()) {
-            // 创建多级路径
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+        String fileName = multipartFile.getOriginalFilename();
+        File file = new File(fileName);
+        OutputStream out = null;
+        try{
+            //获取文件流，以文件流的方式输出到新文件
+//    InputStream in = multipartFile.getInputStream();
+            out = new FileOutputStream(file);
+            byte[] ss = multipartFile.getBytes();
+            for(int i = 0; i < ss.length; i++){
+                out.write(ss[i]);
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+        }finally {
+            if (out != null){
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
         List<Table> list = new ArrayList<>();
         int total=0;
         // 读取excel
-        EasyExcel.read(filename, Table.class, new AnalysisEventListener<Table>() {
+        EasyExcel.read(file, Table.class, new AnalysisEventListener<Table>() {
             // 每解析一行数据,该方法会被调用一次
             @Override
             public void invoke(Table table, AnalysisContext analysisContext) {
@@ -86,6 +120,12 @@ public  class Util {
                 // 可以将解析的数据保存到数据库
             }
         }).sheet().doRead();
+        File f = new File(file.toURI());
+        if (f.delete()){
+            System.out.println("删除成功");
+        }else {
+            System.out.println("删除失败");
+        }
 
         result.setRows(list);
         return list;

@@ -44,13 +44,11 @@
             <tr>
                 <td>性别</td>
                 <td>
-                    <select class="easyui-combobox"  id="shezhixingbie" data-options="prompt:'请输入性别',required:true" name="column4"  style="hight:50px;width:180px">
+                    <select   panelMaxHeight="90px"  class="easyui-combobox"  id="shezhixingbie" data-options="prompt:'请输入性别',required:true,editable:false,panelHeight:'auto'" name="column4" style="width:180px" >
                         <option value="男">男</option>
-                        <option value="女">女</option>
+                        <option  value="女">女</option>
 
                     </select>
-
-
                 </td>
             </tr>
             <tr>
@@ -111,47 +109,71 @@
 </div>
 
 <div id="daochuwz1" class="easyui-dialog" closed="true">
-    <input id="daochuwz2"  type="file"  style="width:300px">
+    <input id="daochuwz2"  type="text"  style="width:300px">
 </div>
 <div id="daoru1" class="easyui-dialog" closed="true">
-    <input id="daoru2"  type="file" value="请选择文件" style="width:300px">
+    <input id="daoru2"  type="text"  style="width:300px">
 </div>
 
 
 
-<select id="xiugaisex" class="easyui-combobox"   data-options="prompt:'请输入身份证类型',required:true" name="column5" style="width:180px;">
-    <option value="居民身份证">居民身份证</option>
-    <option value="港澳台身份证">港澳台身份证</option>
 
-</select>
 
 
 </body>
 <script type="text/javascript">
-    $(".combo-panel.panel-body.panel-body-noheader").width(70);
+    // $('combo-panel panel-body panel-body-noheader')
+    // .style(outerWidth ,80)
+    $('#tb2').textbox({
+
+        buttonText:'下载模板',
+        iconCls:'icon-save',
+        iconAlign:'left',
+        onClickButton:function (){
+            $("#tb1").dialog('close');
+            $.ajax({
+                url: "/xiazaimuban?filename="+$('#tb2').val(),
+                type: "get",
+                // 这两个参数必须写
+                contentType: false,
+                processData: false,
+                success :function (){
+                    alert("下载成功")
+                }
+            })
+        }
+
+    })
+    $("#tb1").dialog({
+        title:'请输入下载位置'
+    })
 
 
 
-// function getPathText() {
-//     var objModel = $('#daoru2').val();
-//     if (objModel == '') {
-//         console.log('请选择文件');
-//     } else {
-//         console.log(objModel);
-//         var valText = objModel.split('.');
-//         console.log(valText);
-//         console.log(valText[1]);
-//         if (valText[1] == 'xlsx' || valText[1] == 'xls') {
-//             console.log('格式正确');
-//         }
-//         else {
-//             console.log('请选择Excel数据表');
-//         }
-//     }
-// }
+    $("#daochuwz1").dialog({
+        title:'请输入导出位置'
+    })
+    $('#daochuwz2').textbox({
 
+        buttonText:'导出',
+        iconCls:'icon-save',
+        iconAlign:'left',
+        onClickButton:function (){
+            $("#daochuwz1").dialog('close');
+            $.ajax({
+                url: "/daochu?filename="+$('#daochuwz2').val(),
+                type: "get",
+                // 这两个参数必须写
+                contentType: false,
+                processData: false,
+                success :function (){
+                    alert("导出成功")
+                }
+            })
+        }
 
-$("#daoru1").dialog({
+    })
+    $("#daoru1").dialog({
         title:'请输入导入位置'
     })
     $('#daoru2').textbox({
@@ -160,17 +182,12 @@ $("#daoru1").dialog({
         iconCls:'icon-save',
         iconAlign:'left',
         onClickButton:function (){
-            // $("#daoru1").dialog('close');
+            $("#daoru1").dialog('close');
             $('#exportExcelQDB').form('clear');
-           var obj= $('#daoru2').filebox('getValue')
-
-
-
             $.ajax({
-                url: "/daoru?filename="+filename,
+                url: "/daoru?filename="+$('#daoru2').val(),
                 type: "get",
-                // dataType: "json",
-
+                dataType: "json",
                 // 这两个参数必须写
                 contentType: false,
                 processData: false,

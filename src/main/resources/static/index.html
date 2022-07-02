@@ -13,8 +13,18 @@
 </head>
 
 <body>
+<form id="form" method="post" enctype="multipart/form-data" >
+    <input   type="file" name="ssssss" style="width:300px">
+<!--    <a href="http://localhost:8080/daochu" class="easyui-linkbutton" plain="true">导出</a>-->
+<!--    <a href="http://localhost:8080/xiazaimuban" class="easyui-linkbutton" plain="true">下载模板</a>-->
+    <a href="http://localhost:8080/xiazaimuban" class="easyui-linkbutton" iconCls="icon-ok">下载模板</a>
+
+    <a href="http://localhost:8080/daochu"  class="easyui-linkbutton" iconCls="icon-back">导出</a>
+</form>
+
 <div>
-    <table method="get" id="mytable"></table>
+
+    <table method="post" id="mytable"></table>
 </div>
 <!--<div class="easyui-dialog" closed="true">-->
 <!--    <table method="get" class="easyui-from" id="daorutanchuang"></table>-->
@@ -44,13 +54,11 @@
             <tr>
                 <td>性别</td>
                 <td>
-                    <select  class="easyui-combobox"  id="shezhixingbie" data-options="prompt:'请输入性别',required:true" name="column4"  style="hight:50px;width:180px">
-                        <option  value="男">男</option>
+                    <select   panelMaxHeight="90px"  class="easyui-combobox"  id="shezhixingbie" data-options="prompt:'请输入性别',required:true,editable:false,panelHeight:'auto'" name="column4" style="width:180px" >
+                        <option value="男">男</option>
                         <option  value="女">女</option>
 
                     </select>
-
-
                 </td>
             </tr>
             <tr>
@@ -106,16 +114,7 @@
 <div id="dd"  class="easyui-dialog" closed="true" title="error" style="width:400px;height:200px;"
      data-options="iconCls:'icon-save',resizable:true,modal:true" >
 </div>
-<div id="tb1" class="easyui-dialog" closed="true">
-    <input id="tb2"  type="text"  style="width:300px">
-</div>
 
-<div id="daochuwz1" class="easyui-dialog" closed="true">
-    <input id="daochuwz2"  type="text"  style="width:300px">
-</div>
-<div id="daoru1" class="easyui-dialog" closed="true">
-    <input id="daoru2"  type="text"  style="width:300px">
-</div>
 
 
 
@@ -124,150 +123,241 @@
 
 </body>
 <script type="text/javascript">
+
+    // function upload12() {
+        // var data = new FormData(document.getElementById("form"))
+        //
+        // $.ajax({
+        //     url: "/daoru",
+        //     type: "POST",
+        //     data: data,
+        //     // 这两个参数必须写
+        //     contentType: false,
+        //     processData: false,
+        //     success:function (data) {
+        //         var  cuowu=0;
+        //         var cuowus =new Array ;
+        //         for (var s=0;s<data.total;s++){
+        //
+        //             $('#exportCelQDB').form('load',{
+        //                 column1:data.rows[s].column1,
+        //                 column2:data.rows[s].column2,
+        //                 column3:data.rows[s].column3,
+        //                 column4:data.rows[s].column4,
+        //                 column5:data.rows[s].column5,
+        //                 column6:data.rows[s].column6,
+        //                 column7:data.rows[s].column7,
+        //                 column8:data.rows[s].column8,
+        //                 column9:data.rows[s].column9,
+        //             })
+        //             var isValid = $("#exportCelQDB").form('validate');
+        //             if(isValid){
+        //                 console.log("第"+(s+1)+"条成功")
+        //             }else{
+        //                 console.log("第"+(s+1)+"条数据不合法")
+        //                 cuowus[cuowu]= "第"+(s+1)+"条数据不合法"
+        //                 cuowu++;
+        //             }
+        //             $('#exportExcelQDB').form('clear');
+        //         }
+        //         //检验数据是否重复
+        //         for (var s=0;s<data.total;s++){
+        //             for (var a=s+1;a<data.total;a++){
+        //                 if (data.rows[s].column6==data.rows[a].column6){
+        //                     cuowus[cuowu]= "第"+(s+1)+"条数据与第"+(a+1)+"条身份证号相同"
+        //                     cuowu++
+        //                 }
+        //                 if (data.rows[s].column8==data.rows[a].column8){
+        //                     cuowus[cuowu]= "第"+(s+1)+"条数据与第"+(a+1)+"条手机号相同"
+        //                     cuowu++
+        //                 }
+        //             }
+        //         }
+        //         //如果数据有错误就弹框出来具体错误信息
+        //         if (cuowu>0){
+        //             $("#dd").dialog('open');
+        //             $('#dd').dialog({
+        //
+        //                 width: 400,
+        //                 height: 200,
+        //                 closed: false,
+        //                 cache: false,
+        //                 content:cuowus.join(",   "),
+        //                 modal: true
+        //             })
+        //         }
+        //
+        //         //如果所有数据合法，就添加到数据库
+        //         if (cuowu==0){
+        //             $.ajax({
+        //                 url: "/inserts?filename="+$('#daoru2').val(),
+        //                 type: "get",
+        //                 // data:{ 'mydata':$('#exportCelQDB').serialize()},
+        //                 // dataType: "json",
+        //                 // 这两个参数必须写
+        //                 contentType: false,
+        //                 processData: false,
+        //                 success: function () {
+        //                     alert("成功");
+        //                     $('#mytable').datagrid('reload')
+        //                 }
+        //             })
+        //         }
+        //     }
+        // })
+    // }
+
+
+
+
+
+
+
     // $('combo-panel panel-body panel-body-noheader')
     // .style(outerWidth ,80)
-    $('#tb2').textbox({
+    // $('#tb2').textbox({
+    //
+    //     buttonText:'下载模板',
+    //     iconCls:'icon-save',
+    //     iconAlign:'left',
+    //     onClickButton:function (){
+    //         $("#tb1").dialog('close');
+    //         $.ajax({
+    //             url: "/xiazaimuban?filename="+$('#tb2').val(),
+    //             type: "get",
+    //             // 这两个参数必须写
+    //             contentType: false,
+    //             processData: false,
+    //             success :function (){
+    //                 alert("下载成功")
+    //             }
+    //         })
+    //     }
+    //
+    // })
+    // $("#tb1").dialog({
+    //     title:'请输入下载位置'
+    // })
 
-        buttonText:'下载模板',
-        iconCls:'icon-save',
-        iconAlign:'left',
-        onClickButton:function (){
-            $("#tb1").dialog('close');
-            $.ajax({
-                url: "/xiazaimuban?filename="+$('#tb2').val(),
-                type: "get",
-                // 这两个参数必须写
-                contentType: false,
-                processData: false,
-                success :function (){
-                    alert("下载成功")
-                }
-            })
-        }
-
-    })
-    $("#tb1").dialog({
-        title:'请输入下载位置'
-    })
 
 
-
-    $("#daochuwz1").dialog({
-        title:'请输入导出位置'
-    })
-    $('#daochuwz2').textbox({
-
-        buttonText:'导出',
-        iconCls:'icon-save',
-        iconAlign:'left',
-        onClickButton:function (){
-            $("#daochuwz1").dialog('close');
-            $.ajax({
-                url: "/daochu?filename="+$('#daochuwz2').val(),
-                type: "get",
-                // 这两个参数必须写
-                contentType: false,
-                processData: false,
-                success :function (){
-                    alert("导出成功")
-                }
-            })
-        }
-
-    })
-    $("#daoru1").dialog({
-        title:'请输入导入位置'
-    })
-    $('#daoru2').textbox({
-
-        buttonText:'导入',
-        iconCls:'icon-save',
-        iconAlign:'left',
-        onClickButton:function (){
-            $("#daoru1").dialog('close');
-            $('#exportExcelQDB').form('clear');
-            $.ajax({
-                url: "/daoru?filename="+$('#daoru2').val(),
-                type: "get",
-                dataType: "json",
-                // 这两个参数必须写
-                contentType: false,
-                processData: false,
-                // 导入后遍历数据并验证数据合法性
-                success:function (data) {
-                    var  cuowu=0;
-                    var cuowus =new Array ;
-                    for (var s=0;s<data.total;s++){
-
-                        $('#exportCelQDB').form('load',{
-                            column1:data.rows[s].column1,
-                            column2:data.rows[s].column2,
-                            column3:data.rows[s].column3,
-                            column4:data.rows[s].column4,
-                            column5:data.rows[s].column5,
-                            column6:data.rows[s].column6,
-                            column7:data.rows[s].column7,
-                            column8:data.rows[s].column8,
-                            column9:data.rows[s].column9,
-                        })
-                        var isValid = $("#exportCelQDB").form('validate');
-                        if(isValid){
-                            console.log("第"+(s+1)+"条成功")
-                        }else{
-                            console.log("第"+(s+1)+"条数据不合法")
-                            cuowus[cuowu]= "第"+(s+1)+"条数据不合法"
-                            cuowu++;
-                        }
-                        $('#exportExcelQDB').form('clear');
-                    }
-                    //检验数据是否重复
-                    for (var s=0;s<data.total;s++){
-                        for (var a=s+1;a<data.total;a++){
-                            if (data.rows[s].column6==data.rows[a].column6){
-                                cuowus[cuowu]= "第"+(s+1)+"条数据与第"+(a+1)+"条身份证号相同"
-                                cuowu++
-                            }
-                            if (data.rows[s].column8==data.rows[a].column8){
-                                cuowus[cuowu]= "第"+(s+1)+"条数据与第"+(a+1)+"条手机号相同"
-                                cuowu++
-                            }
-                        }
-                    }
-                    //如果数据有错误就弹框出来具体错误信息
-                    if (cuowu>0){
-                        $("#dd").dialog('open');
-                        $('#dd').dialog({
-
-                            width: 400,
-                            height: 200,
-                            closed: false,
-                            cache: false,
-                            content:cuowus.join(",   "),
-                            modal: true
-                        })
-                    }
-
-                    //如果所有数据合法，就添加到数据库
-                    if (cuowu==0){
-                        $.ajax({
-                            url: "/inserts?filename="+$('#daoru2').val(),
-                            type: "get",
-                            // data:{ 'mydata':$('#exportCelQDB').serialize()},
-                            // dataType: "json",
-                            // 这两个参数必须写
-                            contentType: false,
-                            processData: false,
-                            success: function () {
-                                alert("成功");
-                                $('#mytable').datagrid('reload')
-                            }
-                        })
-                    }
-                }
-            })
-        }
-
-    })
+    // $("#daochuwz1").dialog({
+    //     title:'请输入导出位置'
+    // })
+    // $('#daochuwz2').textbox({
+    //
+    //     buttonText:'导出',
+    //     iconCls:'icon-save',
+    //     iconAlign:'left',
+    //     onClickButton:function (){
+    //         $("#daochuwz1").dialog('close');
+    //         $.ajax({
+    //             url: "/daochu",
+    //             type: "post",
+    //
+    //             // 这两个参数必须写
+    //             contentType: false,
+    //             processData: false,
+    //             success :function (){
+    //                 alert("导出成功")
+    //             }
+    //         })
+    //     }
+    //
+    // })
+    // $("#daoru1").dialog({
+    //     title:'请输入导入位置'
+    // })
+    // $('#daoru2').textbox({
+    //
+    //     buttonText:'导入',
+    //     iconCls:'icon-save',
+    //     iconAlign:'left',
+    //     onClickButton:function (){
+    //         $("#daoru1").dialog('close');
+    //         $('#exportExcelQDB').form('clear');
+    //         $.ajax({
+    //             url: "/daoru",
+    //             type: "get",
+    //             dataType: "multipart/form-data",
+    //             // 这两个参数必须写
+    //             contentType: false,
+    //             processData: false,
+    //             // 导入后遍历数据并验证数据合法性
+    //             success:function (data) {
+    //                 var  cuowu=0;
+    //                 var cuowus =new Array ;
+    //                 for (var s=0;s<data.total;s++){
+    //
+    //                     $('#exportCelQDB').form('load',{
+    //                         column1:data.rows[s].column1,
+    //                         column2:data.rows[s].column2,
+    //                         column3:data.rows[s].column3,
+    //                         column4:data.rows[s].column4,
+    //                         column5:data.rows[s].column5,
+    //                         column6:data.rows[s].column6,
+    //                         column7:data.rows[s].column7,
+    //                         column8:data.rows[s].column8,
+    //                         column9:data.rows[s].column9,
+    //                     })
+    //                     var isValid = $("#exportCelQDB").form('validate');
+    //                     if(isValid){
+    //                         console.log("第"+(s+1)+"条成功")
+    //                     }else{
+    //                         console.log("第"+(s+1)+"条数据不合法")
+    //                         cuowus[cuowu]= "第"+(s+1)+"条数据不合法"
+    //                         cuowu++;
+    //                     }
+    //                     $('#exportExcelQDB').form('clear');
+    //                 }
+    //                 //检验数据是否重复
+    //                 for (var s=0;s<data.total;s++){
+    //                     for (var a=s+1;a<data.total;a++){
+    //                         if (data.rows[s].column6==data.rows[a].column6){
+    //                             cuowus[cuowu]= "第"+(s+1)+"条数据与第"+(a+1)+"条身份证号相同"
+    //                             cuowu++
+    //                         }
+    //                         if (data.rows[s].column8==data.rows[a].column8){
+    //                             cuowus[cuowu]= "第"+(s+1)+"条数据与第"+(a+1)+"条手机号相同"
+    //                             cuowu++
+    //                         }
+    //                     }
+    //                 }
+    //                 //如果数据有错误就弹框出来具体错误信息
+    //                 if (cuowu>0){
+    //                     $("#dd").dialog('open');
+    //                     $('#dd').dialog({
+    //
+    //                         width: 400,
+    //                         height: 200,
+    //                         closed: false,
+    //                         cache: false,
+    //                         content:cuowus.join(",   "),
+    //                         modal: true
+    //                     })
+    //                 }
+    //
+    //                 //如果所有数据合法，就添加到数据库
+    //                 if (cuowu==0){
+    //                     $.ajax({
+    //                         url: "/inserts?filename="+$('#daoru2').val(),
+    //                         type: "get",
+    //                         // data:{ 'mydata':$('#exportCelQDB').serialize()},
+    //                         // dataType: "json",
+    //                         // 这两个参数必须写
+    //                         contentType: false,
+    //                         processData: false,
+    //                         success: function () {
+    //                             alert("成功");
+    //                             $('#mytable').datagrid('reload')
+    //                         }
+    //                     })
+    //                 }
+    //             }
+    //         })
+    //     }
+    //
+    // })
 
 
     <!--  加载页面-->
@@ -405,101 +495,92 @@
                         }
                     });
                 }},
-            <!-- 导出按钮-->
-            {text:'导出',iconCls:'icon-print',
-                handler:function(){
-                    $("#daochuwz1").dialog('open');
 
-                }},
-            {text:'下载模板',iconCls:'icon-print',
-                handler:function(){
-                    $("#tb1").dialog('open');
-
-                }},
             <!-- 导入按钮-->
             {text:'导入',iconCls:'icon-print',
                 handler:function(){
-                    $("#daoru1").dialog('open');
-                    // $('#exportExcelQDB').form('clear');
-                    // $.ajax({
-                    //     url: "/daoru",
-                    //     type: "get",
-                    //     dataType: "json",
-                    //     // 这两个参数必须写
-                    //     contentType: false,
-                    //     processData: false,
-                    //     // 导入后遍历数据并验证数据合法性
-                    //     success:function (data) {
-                    //         var  cuowu=0;
-                    //         var cuowus =new Array ;
-                    //         for (var s=0;s<data.total;s++){
-                    //
-                    //             $('#exportCelQDB').form('load',{
-                    //                 column1:data.rows[s].column1,
-                    //                 column2:data.rows[s].column2,
-                    //                 column3:data.rows[s].column3,
-                    //                 column4:data.rows[s].column4,
-                    //                 column5:data.rows[s].column5,
-                    //                 column6:data.rows[s].column6,
-                    //                 column7:data.rows[s].column7,
-                    //                 column8:data.rows[s].column8,
-                    //                 column9:data.rows[s].column9,
-                    //             })
-                    //             var isValid = $("#exportCelQDB").form('validate');
-                    //             if(isValid){
-                    //                 console.log("第"+(s+1)+"条成功")
-                    //             }else{
-                    //                 console.log("第"+(s+1)+"条数据不合法")
-                    //                 cuowus[cuowu]= "第"+(s+1)+"条数据不合法"
-                    //                 cuowu++;
-                    //             }
-                    //             $('#exportExcelQDB').form('clear');
-                    //         }
-                    //         //检验数据是否重复
-                    //         for (var s=0;s<data.total;s++){
-                    //             for (var a=s+1;a<data.total;a++){
-                    //                 if (data.rows[s].column6==data.rows[a].column6){
-                    //                     cuowus[cuowu]= "第"+(s+1)+"条数据与第"+(a+1)+"条身份证号相同"
-                    //                     cuowu++
-                    //                 }
-                    //                 if (data.rows[s].column8==data.rows[a].column8){
-                    //                     cuowus[cuowu]= "第"+(s+1)+"条数据与第"+(a+1)+"条手机号相同"
-                    //                     cuowu++
-                    //                 }
-                    //             }
-                    //         }
-                    //         //如果数据有错误就弹框出来具体错误信息
-                    //         if (cuowu>0){
-                    //             $("#dd").dialog('open');
-                    //             $('#dd').dialog({
-                    //
-                    //                 width: 400,
-                    //                 height: 200,
-                    //                 closed: false,
-                    //                 cache: false,
-                    //                 content:cuowus.join(",   "),
-                    //                 modal: true
-                    //             })
-                    //         }
-                    //
-                    //         //如果所有数据合法，就添加到数据库
-                    //         if (cuowu==0){
-                    //             $.ajax({
-                    //                 url: "/inserts",
-                    //                 type: "post",
-                    //                 data:{ 'mydata':$('#exportCelQDB').serialize()},
-                    //                 // dataType: "json",
-                    //                 // 这两个参数必须写
-                    //                 contentType: false,
-                    //                 processData: false,
-                    //                 success: function () {
-                    //                     alert("成功");
-                    //                     $('#mytable').datagrid('reload')
-                    //                 }
-                    //             })
-                    //         }
-                    //     }
-                    // })
+
+                    var data = new FormData(document.getElementById("form"))
+
+                    $.ajax({
+                        url: "/daoru",
+                        type: "POST",
+                        data: data,
+                        // 这两个参数必须写
+                        contentType: false,
+                        processData: false,
+                        success:function (data) {
+                            var  cuowu=0;
+                            var cuowus =new Array ;
+                            for (var s=0;s<data.total;s++){
+
+                                $('#exportCelQDB').form('load',{
+                                    column1:data.rows[s].column1,
+                                    column2:data.rows[s].column2,
+                                    column3:data.rows[s].column3,
+                                    column4:data.rows[s].column4,
+                                    column5:data.rows[s].column5,
+                                    column6:data.rows[s].column6,
+                                    column7:data.rows[s].column7,
+                                    column8:data.rows[s].column8,
+                                    column9:data.rows[s].column9,
+                                })
+                                var isValid = $("#exportCelQDB").form('validate');
+                                if(isValid){
+                                    console.log("第"+(s+1)+"条成功")
+                                }else{
+                                    console.log("第"+(s+1)+"条数据不合法")
+                                    cuowus[cuowu]= "第"+(s+1)+"条数据不合法"
+                                    cuowu++;
+                                }
+                                $('#exportExcelQDB').form('clear');
+                            }
+                            //检验数据是否重复
+                            for (var s=0;s<data.total;s++){
+                                for (var a=s+1;a<data.total;a++){
+                                    if (data.rows[s].column6==data.rows[a].column6){
+                                        cuowus[cuowu]= "第"+(s+1)+"条数据与第"+(a+1)+"条身份证号相同"
+                                        cuowu++
+                                    }
+                                    if (data.rows[s].column8==data.rows[a].column8){
+                                        cuowus[cuowu]= "第"+(s+1)+"条数据与第"+(a+1)+"条手机号相同"
+                                        cuowu++
+                                    }
+                                }
+                            }
+                            //如果数据有错误就弹框出来具体错误信息
+                            if (cuowu>0){
+                                $("#dd").dialog('open');
+                                $('#dd').dialog({
+
+                                    width: 400,
+                                    height: 200,
+                                    closed: false,
+                                    cache: false,
+                                    content:cuowus.join(",   "),
+                                    modal: true
+                                })
+                            }
+
+                            //如果所有数据合法，就添加到数据库
+                            if (cuowu==0){
+                                var data2 = new FormData(document.getElementById("form"))
+
+                                $.ajax({
+                                    url: "/inserts",
+                                    type: "POST",
+                                    data: data2,
+                                    // 这两个参数必须写
+                                    contentType: false,
+                                    processData: false,
+                                    success: function () {
+                                        alert("成功");
+                                        $('#mytable').datagrid('reload')
+                                    }
+                                })
+                            }
+                        }
+                    })
                 }}
         ],
         // 显示分页条
